@@ -265,6 +265,11 @@ body {
   .facade-sketch {
     opacity: 0.6;
   }
+
+  /* …except the contact office, whose people should stay clearly visible */
+  .facade-sketch--contact {
+    opacity: 0.92;
+  }
 }
 
 /* People at work inside the open office building (contact sketch) — tiny ambient loops */

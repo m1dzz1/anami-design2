@@ -2,7 +2,8 @@
  * Faint glass-architecture sketch used behind light sections (reference): glass towers in
  * perspective drawn on the reference's 1774-wide canvas and scaled with the section width.
  * Lines run past the bottom of the viewBox so the facade reaches the end of the section at any
- * height; on phones the canvas is enlarged so the tower sits right behind the headline.
+ * height; on phones the canvas is enlarged so the tower sits right behind the headline (the contact
+ * office even more, so the people inside stay readable).
  *
  * - services: the main tower is built floor by floor on scroll, with a tower crane ([data-build]).
  * - contact:  an office tower with its left facade open, people at work on every floor
@@ -92,14 +93,19 @@ function RightStructure({ tower }: { tower: Tower }) {
    Services — tower under construction
    -------------------------------------------------------------------------- */
 
-/** Tower crane standing on the roof edge; drawn at its final (completed-building) position. */
-function Crane({ x, y }: { x: number; y: number }) {
+/**
+ * Tower crane standing on the sloped roof edge (`slope` = the edge's dy/dx, so each leg ends exactly on it);
+ * drawn at its final (completed-building) position.
+ */
+function Crane({ x, y, slope }: { x: number; y: number; slope: number }) {
   const top = y - 165;
   const jib = top + 8;
+  const roofAt = (dx: number) => y + dx * slope;
   return (
     <g strokeOpacity="0.3">
-      {/* Lattice mast */}
-      <path d={`M${x - 7} ${y} L${x - 7} ${top} M${x + 7} ${y} L${x + 7} ${top}`} />
+      {/* Lattice mast, footed on the roof edge */}
+      <path d={`M${x - 7} ${roofAt(-7)} L${x - 7} ${top} M${x + 7} ${roofAt(7)} L${x + 7} ${top}`} />
+      <path d={`M${x - 14} ${roofAt(-14)} L${x + 14} ${roofAt(14)}`} strokeWidth="2" strokeOpacity="0.35" />
       <path d={range(6).map((i) => `M${x - 7} ${y - 15 - i * 25} L${x + 7} ${y - 40 - i * 25}`).join(" ")} strokeOpacity="0.2" />
       {/* Jib + counter-jib */}
       <path d={`M${x - 170} ${jib} L${x + 95} ${jib} M${x - 170} ${jib + 12} L${x + 95} ${jib + 12}`} />
@@ -125,7 +131,8 @@ function BuildingTower({ tower, id }: { tower: Tower; id: (name: string) => stri
   // Clip = the tower silhouette; moving it down by whole storeys hides the unfinished floors,
   // and because floor lines run parallel to the roof edges each step reveals exactly one floor.
   const silhouette = `M${lx - 3} ${ly - 3} L${cx} ${cy - 3} L1780 ${ry - 3} L1780 ${BOTTOM + 2000} L${lx - 3} ${BOTTOM + 2000} Z`;
-  const craneX = cx - 75;
+  // Far enough down the roof edge that the jib and apex stay inside the canvas (the section clips above it)
+  const craneX = cx - 140;
   const craneY = ly + (craneX - lx) * leftSlope(tower);
 
   return (
@@ -148,7 +155,7 @@ function BuildingTower({ tower, id }: { tower: Tower; id: (name: string) => stri
       </g>
       {/* Hidden until the build animation runs; never shown to reduced-motion users */}
       <g data-build-crane opacity="0">
-        <Crane x={craneX} y={craneY} />
+        <Crane x={craneX} y={craneY} slope={leftSlope(tower)} />
       </g>
     </g>
   );
@@ -167,7 +174,7 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
       aria-hidden="true"
       data-facade
       viewBox="0 0 1774 834"
-      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible text-ink max-md:w-[158vw] ${className}`}
+      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible text-ink ${variant === "contact" ? "facade-sketch--contact max-md:w-[190vw]" : "max-md:w-[158vw]"} ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1"

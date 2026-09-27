@@ -39,7 +39,7 @@ export const sectionIds = {
 } as const;
 
 export const images = {
-  heroBackground: { src: "/images/anami-hero-background.webp", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoMAAcAAoBCJYwCdADbr964sAD++KEXt15YPuNPSBee/G5XSmZ4Qmmlx6nMF+ghdGnmRmVdUXzMAA==" },
+  heroBackground: { src: "/images/anami-hero-background.png", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoMAAcAA4BaJZQCdIIjExqdoAD+75EOkXoTjillukZebMw9qgLwcZW1bIMI5riBff92vyi9oAA=" },
   heroFeatured: { src: "/images/anami-hero-featured-building.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoMAAkAAoBCJQBOgBuEYO5BkAD+75ipoPTILCuBXovCayokFmWfz1GoRFVTJLqXfOetuWXwz/2nvjn3Pn8n8HPfQsM6POTTFbv4MAAA" },
   aboutMain: { src: "/images/anami-about-main-building.webp", width: 1122, height: 1402, blur: "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoKAAwAAoBCJYgCdAEXfn5bUZICgAD+75pb5yTrjnYL+ALHHgHeEdb3HwcLWIhV5rxFy7BLeY4+pU7wXPqKzEUfLRcAvg4YbHAFS+KSHHrAeFhAj5BQc/WgAAA=" },
   aboutNature: { src: "/images/anami-about-nature-background.webp", width: 1403, height: 1121, blur: "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoMAAoAAoBCJYgCdAC9ighZRLAA/s4E/LHHfyslfXy6Lwq1UI5kRgtQlcA0BtY3SAgkvJc19hK3bm1x7UjowJue2neMBkwAAAA=" },

@@ -140,8 +140,9 @@ export default function Motion({ lang }: { lang: string }) {
             );
           });
 
-          // 6c. Services tower — rises smoothly: frame first, glass cladding just behind it, crane on top.
-          // Everything is finished (and the crane gone) while the section top is still a third down the screen.
+          // 6c. Services tower — rises smoothly: frame first, glass cladding just behind it, crane riding on the
+          // glass roof (the visible one). The tower is finished while the section top is still a third down the
+          // screen; the crane stays on the roof and fades out as it nears the top of the viewport.
           gsap.utils.toArray<SVGGElement>("[data-build]").forEach((build) => {
             const floors = Number(build.dataset.floors);
             const storey = Number(build.dataset.floor);
@@ -154,10 +155,21 @@ export default function Motion({ lang }: { lang: string }) {
                 defaults: { ease: "none" },
                 scrollTrigger: { trigger: build.closest("section"), start: "top 95%", end: "top 35%", scrub: 1.2 },
               })
-              .fromTo(crane, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0)
-              .fromTo([frame, crane], { y: floors * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0)
-              .fromTo(clad, { y: (floors + 1.5) * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0.12)
-              .to(crane, { autoAlpha: 0, y: -storey * 0.6, duration: 0.14 }, 0.8);
+              .fromTo(frame, { y: floors * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0)
+              .fromTo(crane, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0.12)
+              .fromTo([clad, crane], { y: (floors + 1.5) * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0.12);
+
+            // Exit is keyed to the sketch itself (the crane sits at its top), so it tracks the crane on any screen size.
+            // Tweens the crane's inner group so it doesn't fight the build timeline over the same properties.
+            const craneBody = crane.firstElementChild;
+            const sketch = build.closest("svg");
+            if (craneBody && sketch) {
+              gsap.to(craneBody, {
+                autoAlpha: 0,
+                ease: "none",
+                scrollTrigger: { trigger: sketch, start: "top 38%", end: "top 12%", scrub: 0.6 },
+              });
+            }
           });
 
           if (isDesktop) {

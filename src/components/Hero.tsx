@@ -12,7 +12,7 @@ export default function Hero({ t }: { t: Dictionary }) {
     <section
       id={sectionIds.home}
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink"
+      className="relative isolate flex min-h-[80svh] flex-col overflow-hidden bg-ink"
     >
       {/* Background photograph */}
       <div data-hero-bg className="absolute inset-0 -z-10">

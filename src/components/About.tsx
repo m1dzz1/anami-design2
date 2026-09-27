@@ -10,13 +10,13 @@ export default function About({ t }: { t: Dictionary }) {
     <section
       id={sectionIds.about}
       aria-labelledby="about-title"
-      className="relative overflow-hidden bg-[linear-gradient(160deg,var(--anami-forest)_0%,#173a30_45%,var(--anami-ink)_100%)] py-20 sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-[linear-gradient(160deg,var(--anami-forest)_0%,#173a30_45%,var(--anami-ink)_100%)] py-16 sm:py-20 lg:py-24"
     >
       {/* Restrained architectural lines */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-[calc(var(--gutter)*0.5)] w-px bg-white/[0.05]" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/[0.06]" />
 
-      <div className="container-x grid items-center gap-14 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-16 xl:gap-20">
+      <div className="container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14 xl:gap-16">
         {/* Layered photographic composition */}
         <div data-reveal="composition" className="relative aspect-[4/4.4] w-full sm:aspect-[1.38/1]">
           {/* Nature — sits behind, upper right */}
@@ -91,7 +91,7 @@ export default function About({ t }: { t: Dictionary }) {
           <p data-reveal-text className="kicker text-mint">
             {a.kicker}
           </p>
-          <h2 id="about-title" className="display mt-6 text-[clamp(2.8rem,14vw,7.4rem)] text-white lg:text-[clamp(4rem,6.4vw,7rem)]">
+          <h2 id="about-title" className="display mt-6 text-[clamp(2.6rem,13vw,6.6rem)] text-white lg:text-[clamp(3.6rem,5.6vw,6.2rem)]">
             <span className="block overflow-hidden pb-[0.04em]"><span data-line className="block">{a.titleLine1}</span></span>
             <span className="block overflow-hidden pb-[0.04em]"><span data-line className="block">
               {a.titleLine2Plain} <span className="text-mint">{a.titleLine2Accent}</span>
