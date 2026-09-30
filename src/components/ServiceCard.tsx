@@ -11,6 +11,8 @@ type Service = {
   long: string;
   points: string[];
   imageAlt: string;
+  cta: string;
+  contactCta: string;
 };
 
 export default function ServiceCard({
@@ -24,7 +26,7 @@ export default function ServiceCard({
   index: number;
   service: Service;
   image: { src: string; blur: string };
-  labels: { more: string; details: string; contact: string; close: string };
+  labels: { details: string; close: string };
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const number = `0${index + 1}`;
@@ -77,8 +79,7 @@ export default function ServiceCard({
           aria-haspopup="dialog"
           className="group/btn mt-auto inline-flex items-center gap-4 self-start pt-7 text-[0.75rem] font-bold uppercase tracking-[0.14em] text-green transition-colors duration-300 hover:text-ink after:absolute after:inset-0 after:content-['']"
         >
-          {labels.more}
-          <span className="sr-only">: {service.title}</span>
+          {service.cta}
           <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
         </button>
         <span
@@ -119,7 +120,7 @@ export default function ServiceCard({
               ))}
             </ul>
             <a href={`#${sectionIds.contact}`} onClick={close} className="btn btn-solid mt-8">
-              {labels.contact}
+              {service.contactCta}
               <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
             </a>
           </div>

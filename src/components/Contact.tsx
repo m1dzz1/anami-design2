@@ -16,6 +16,11 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
       className="on-light relative overflow-hidden bg-[linear-gradient(180deg,var(--anami-mist)_0%,#f4f8f3_100%)] py-20 text-ink sm:py-24 lg:py-28"
     >
       <FacadeSketch variant="contact" className="max-md:top-4 md:top-[4%]" />
+      {/* Phones: soft mist veil on the left so the headline and intro read cleanly over the office */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[40rem] bg-[linear-gradient(90deg,rgb(237_243_236/0.9)_0%,rgb(237_243_236/0.75)_45%,rgb(237_243_236/0)_80%)] [mask-image:linear-gradient(180deg,#000_65%,transparent)] md:hidden"
+      />
 
       <div className="container-x relative">
         <div className="grid gap-8 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] xl:gap-16">

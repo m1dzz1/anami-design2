@@ -41,7 +41,7 @@ export default function Services({ t }: { t: Dictionary }) {
                 index={index}
                 service={s.items[key]}
                 image={serviceImages[key]}
-                labels={{ more: s.more, details: s.detailsLabel, contact: s.contactCta, close: t.a11y.close }}
+                labels={{ details: s.detailsLabel, close: t.a11y.close }}
               />
             </div>
           ))}

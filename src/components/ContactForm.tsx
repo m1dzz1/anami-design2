@@ -21,14 +21,36 @@ type Status =
 
 const fields: ContactField[] = ["name", "email", "message"];
 
+/** Matches MIN_FILL_TIME_MS in lib/contact-spam.ts, plus a little slack. */
+const TICKET_MIN_AGE_MS = 3200;
+
 export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const startedAt = useRef(0);
+  const ticket = useRef<{ value: string; fetchedAt: number } | null>(null);
+
+  const loadTicket = async () => {
+    try {
+      const response = await fetch("/api/contact", { cache: "no-store" });
+      const body = (await response.json()) as { ticket?: string };
+      if (body.ticket) ticket.current = { value: body.ticket, fetchedAt: Date.now() };
+    } catch {
+      ticket.current = null;
+    }
+  };
 
   useEffect(() => {
-    startedAt.current = Date.now();
+    loadTicket();
   }, []);
+
+  /** A ticket old enough to be accepted: the server drops submissions made < 3 s after it was issued. */
+  const readyTicket = async (forceNew = false) => {
+    if (forceNew || !ticket.current) await loadTicket();
+    if (!ticket.current) return "";
+    const wait = TICKET_MIN_AGE_MS - (Date.now() - ticket.current.fetchedAt);
+    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+    return ticket.current.value;
+  };
 
   const readForm = (form: HTMLFormElement) => {
     const data = new FormData(form);
@@ -64,17 +86,24 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
     setStatus({ kind: "sending" });
     const honeypot = new FormData(form).get("website");
 
-    try {
+    const send = async (forceNewTicket = false) => {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...input, website: honeypot, lang, elapsed: Date.now() - startedAt.current }),
+        body: JSON.stringify({ ...input, website: honeypot, lang, ticket: await readyTicket(forceNewTicket) }),
       });
       const body = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
         fields?: ContactErrors;
       };
+      return { response, body };
+    };
+
+    try {
+      let { response, body } = await send();
+      // Page left open for hours: the ticket expired, so retry once with a fresh one
+      if (body.error === "expired") ({ response, body } = await send(true));
 
       if (response.ok && body.ok) {
         form.reset();
@@ -92,7 +121,9 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
           ? t.errors.notConfigured
           : body.error === "rate_limited"
             ? t.errors.rateLimited
-            : t.errors.server;
+            : body.error === "spam"
+              ? t.errors.spam
+              : t.errors.server;
       setStatus({ kind: "error", message });
     } catch {
       setStatus({ kind: "error", message: t.errors.server });

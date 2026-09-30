@@ -118,7 +118,7 @@ body {
 }
 
 @utility display-xl {
-  font-size: clamp(3.2rem, 17vw, 9.6rem);
+  font-size: clamp(3.2rem, 15vw, 9.6rem);
 }
 
 @media (min-width: 768px) {
@@ -266,9 +266,29 @@ body {
     opacity: 0.6;
   }
 
-  /* …except the contact office, whose people should stay clearly visible */
+  /* The contact office is drawn larger here: same soft top-down fade as on tablets, from a quieter start */
   .facade-sketch--contact {
-    opacity: 0.92;
+    opacity: 0.55;
+  }
+}
+
+/* Tablets and phones: the enlarged contact office fades gradually from the roof down, so it is full at the
+   top floors and quiet behind the text further down, without a visible edge */
+@media (max-width: 1279.98px) {
+  .facade-sketch--contact .mask-stop-roof {
+    stop-opacity: 1;
+  }
+  .facade-sketch--contact .mask-stop-mid {
+    stop-opacity: 0.78;
+  }
+  .facade-sketch--contact .mask-stop-low {
+    stop-opacity: 0.14;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .facade-sketch--contact {
+    opacity: 0.85;
   }
 }
 

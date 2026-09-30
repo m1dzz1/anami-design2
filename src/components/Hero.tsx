@@ -12,7 +12,7 @@ export default function Hero({ t }: { t: Dictionary }) {
     <section
       id={sectionIds.home}
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[80svh] flex-col overflow-hidden bg-ink"
+      className="relative isolate flex min-h-[90dvh] flex-col overflow-hidden bg-ink"
     >
       {/* Background photograph */}
       <div data-hero-bg className="absolute inset-0 -z-10">
@@ -41,13 +41,21 @@ export default function Hero({ t }: { t: Dictionary }) {
           <div className="max-w-[46rem]">
             <span aria-hidden="true" className="hero-rule mb-7 block h-px w-[4.5rem] origin-left bg-mint/80" />
             <h1 id="hero-title" className="display display-xl">
+              <span className="hero-fade mb-5 block font-sans text-[0.6875rem] font-bold leading-[1.4] tracking-[0.22em] text-mint" style={{ animationDelay: "100ms" }}>
+                {h.kicker}
+              </span>
               <span className="block overflow-hidden pb-[0.04em]">
                 <span className="hero-line block text-white" style={{ animationDelay: "150ms" }}>
+                  {h.titleBrand}
+                </span>
+              </span>
+              <span className="block overflow-hidden pb-[0.04em]">
+                <span className="hero-line block text-white" style={{ animationDelay: "230ms" }}>
                   {h.titleLine1}
                 </span>
               </span>
               <span className="block overflow-hidden pb-[0.06em]">
-                <span className="hero-line block text-mint" style={{ animationDelay: "280ms" }}>
+                <span className="hero-line block text-mint" style={{ animationDelay: "310ms" }}>
                   {h.titleLine2}
                 </span>
               </span>

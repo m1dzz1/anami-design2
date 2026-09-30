@@ -141,35 +141,29 @@ export default function Motion({ lang }: { lang: string }) {
           });
 
           // 6c. Services tower — rises smoothly: frame first, glass cladding just behind it, crane riding on the
-          // glass roof (the visible one). The tower is finished while the section top is still a third down the
-          // screen; the crane stays on the roof and fades out as it nears the top of the viewport.
+          // glass roof (the visible one). Build and crane exit share one scrubbed timeline keyed to the sketch
+          // (the crane sits at its top), so they can't drift apart on any screen size: the tower is finished with
+          // the sketch top ~55% down the screen, the crane is gone by 40%, and the finished tower then stays in
+          // view without it for the last 40% of the viewport plus the roof's own height.
           gsap.utils.toArray<SVGGElement>("[data-build]").forEach((build) => {
             const floors = Number(build.dataset.floors);
             const storey = Number(build.dataset.floor);
             const frame = build.querySelector("[data-build-frame]");
             const clad = build.querySelector("[data-build-clad]");
             const crane = build.querySelector("[data-build-crane]");
-            if (!frame || !clad || !crane) return;
+            // Inner group, so the exit fade doesn't fight the entrance over the same properties
+            const craneBody = crane?.firstElementChild;
+            const sketch = build.closest("svg");
+            if (!frame || !clad || !crane || !craneBody || !sketch) return;
             gsap
               .timeline({
                 defaults: { ease: "none" },
-                scrollTrigger: { trigger: build.closest("section"), start: "top 95%", end: "top 35%", scrub: 1.2 },
+                scrollTrigger: { trigger: sketch, start: "top 95%", end: "top 40%", scrub: 0.8 },
               })
               .fromTo(frame, { y: floors * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0)
               .fromTo(crane, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0.12)
-              .fromTo([clad, crane], { y: (floors + 1.5) * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0.12);
-
-            // Exit is keyed to the sketch itself (the crane sits at its top), so it tracks the crane on any screen size.
-            // Tweens the crane's inner group so it doesn't fight the build timeline over the same properties.
-            const craneBody = crane.firstElementChild;
-            const sketch = build.closest("svg");
-            if (craneBody && sketch) {
-              gsap.to(craneBody, {
-                autoAlpha: 0,
-                ease: "none",
-                scrollTrigger: { trigger: sketch, start: "top 38%", end: "top 12%", scrub: 0.6 },
-              });
-            }
+              .fromTo([clad, crane], { y: (floors + 1.5) * storey }, { y: 0, duration: 0.72, ease: "power1.out" }, 0.12)
+              .fromTo(craneBody, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, 0.92);
           });
 
           if (isDesktop) {

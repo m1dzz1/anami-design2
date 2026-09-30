@@ -174,7 +174,7 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
       aria-hidden="true"
       data-facade
       viewBox="0 0 1774 834"
-      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible text-ink ${variant === "contact" ? "facade-sketch--contact max-md:w-[190vw]" : "max-md:w-[158vw]"} ${className}`}
+      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible text-ink ${variant === "contact" ? "facade-sketch--contact max-md:w-[270vw] md:max-xl:w-[150vw]" : "max-md:w-[158vw]"} ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1"
@@ -192,9 +192,12 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
           <stop offset="0" stopColor="#fff" stopOpacity="0" />
           <stop offset="1" stopColor="#fff" stopOpacity="0.6" />
         </linearGradient>
+        {/* Mid stops sit on the desktop's straight fade; globals.css reshapes them for the contact office on smaller screens */}
         <linearGradient id={id("mask-fill")} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#fff" />
-          <stop offset="0.64" stopColor="#fff" stopOpacity="0.8" />
+          <stop className="mask-stop-roof" offset="0.3" stopColor="#fff" stopOpacity="0.906" />
+          <stop className="mask-stop-mid" offset="0.45" stopColor="#fff" stopOpacity="0.859" />
+          <stop className="mask-stop-low" offset="0.64" stopColor="#fff" stopOpacity="0.8" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
         <mask id={id("mask")} maskUnits="userSpaceOnUse" x="-200" y="-400" width="2200" height={BOTTOM + 400}>
