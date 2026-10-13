@@ -12,7 +12,7 @@ export default function Services({ t }: { t: Dictionary }) {
     <section
       id={sectionIds.services}
       aria-labelledby="services-title"
-      className="on-light relative overflow-hidden bg-[linear-gradient(180deg,#f3f7f2_0%,var(--anami-mist)_100%)] py-20 text-ink sm:py-24 lg:py-28"
+      className="on-light relative overflow-hidden bg-[linear-gradient(180deg,#f2f7f4_0%,var(--anami-mist)_100%)] py-20 text-ink sm:py-24 lg:py-28"
     >
       <FacadeSketch variant="services" className="max-md:top-4" />
 

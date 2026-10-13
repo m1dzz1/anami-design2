@@ -7,11 +7,11 @@
  *
  * - services: the main tower is built floor by floor on scroll, with a tower crane ([data-build]).
  * - contact:  an office tower with its left facade open, people at work on every floor
- *             (see OfficeCutaway.tsx).
+ *             (see OfficeCutaway.tsx, drawn lazily by LazyOfficeCutaway.tsx).
  * Other buildings are one [data-facade-part] each and "grow" out of the ground (see Motion.tsx).
  */
 
-import OfficeCutaway from "./OfficeCutaway";
+import LazyOfficeCutaway from "./LazyOfficeCutaway";
 
 type Variant = "services" | "contact";
 
@@ -185,8 +185,8 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
           <stop offset="1" stopColor="#fff" stopOpacity="0.15" />
         </linearGradient>
         <linearGradient id={id("shade")} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#dde7de" stopOpacity="0.85" />
-          <stop offset="1" stopColor="#dde7de" stopOpacity="0.15" />
+          <stop offset="0" stopColor="#dde7e3" stopOpacity="0.85" />
+          <stop offset="1" stopColor="#dde7e3" stopOpacity="0.15" />
         </linearGradient>
         <linearGradient id={id("fade")} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#fff" stopOpacity="0" />
@@ -241,7 +241,7 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
 
         {variant === "contact" && (
           <g data-facade-part>
-            <OfficeCutaway shade="#e3ebe4" />
+            <LazyOfficeCutaway />
           </g>
         )}
       </g>

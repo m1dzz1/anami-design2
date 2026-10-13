@@ -2,22 +2,24 @@
 
 /* ==========================================================================
    ANAMI design tokens
-   Provisional brand colours — replace these values when the official
-   brand guidelines arrive. Every component reads from these tokens.
+   Derived from the official logo standard: Pantone 7474 C teal (#13747E)
+   and Pantone 424 C grey (#717270). Every component reads from these tokens.
    ========================================================================== */
 :root {
-  --anami-ink: #102a24; /* primary dark */
-  --anami-forest: #1d4538; /* secondary dark */
-  --anami-green: #36785b; /* primary green */
-  --anami-mint: #a7c8ae; /* light green */
-  --anami-mist: #edf3ec; /* light background */
+  --anami-ink: #0e2a2e; /* primary dark */
+  --anami-forest: #17434a; /* secondary dark */
+  --anami-green: #13747e; /* primary accent = brand teal */
+  --anami-mint: #9ccacd; /* light teal */
+  --anami-mist: #edf3f3; /* light background */
   --anami-white: #ffffff;
+  --anami-teal: #13747e; /* Pantone 7474 C — logo wordmark */
+  --anami-grey: #717270; /* Pantone 424 C — logo building mark */
 
   /* Subtle tonal variations derived from the palette */
-  --anami-ink-deep: #0b1f1a;
-  --anami-green-deep: #2b6149;
-  --anami-mist-deep: #e1ebe0;
-  --anami-text-muted: #4d615a;
+  --anami-ink-deep: #091e21;
+  --anami-green-deep: #0f5c64;
+  --anami-mist-deep: #dfe9ea;
+  --anami-text-muted: #5a6465;
 
   --gutter: clamp(1rem, 5.6vw, 6.25rem);
   --container: 90rem;
@@ -165,10 +167,17 @@ body {
 
 /* Glass surface used by the hero panel and the editorial values panel */
 .glass {
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03));
+  background: linear-gradient(135deg, rgb(14 42 46 / 0.62), rgb(14 42 46 / 0.42));
   border: 1px solid rgb(255 255 255 / 0.28);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-  backdrop-filter: blur(10px) saturate(120%);
+}
+
+/* Live blur is expensive while scrolling on phones — there the tinted fill above stands in for it */
+@media (min-width: 1024px) {
+  .glass {
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03));
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    backdrop-filter: blur(10px) saturate(120%);
+  }
 }
 
 /* Buttons */
@@ -204,15 +213,20 @@ body {
 }
 
 .btn-glass {
-  background: rgb(54 120 91 / 0.72);
-  border-color: rgb(167 200 174 / 0.55);
+  background: rgb(19 116 126 / 0.72);
+  border-color: rgb(156 202 205 / 0.55);
   color: var(--anami-white);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+}
+
+@media (min-width: 1024px) {
+  .btn-glass {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
 }
 
 .btn-glass:hover {
-  background: rgb(54 120 91 / 0.95);
+  background: rgb(19 116 126 / 0.95);
   border-color: var(--anami-mint);
 }
 
@@ -292,8 +306,9 @@ body {
   }
 }
 
-/* People at work inside the open office building (contact sketch) — tiny ambient loops */
-@media (prefers-reduced-motion: no-preference) {
+/* People at work inside the open office building (contact sketch) — tiny ambient loops.
+   Desktop only: endless SVG animations keep phones repainting for the whole visit */
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
   .facade-people .worker-type {
     animation: worker-type 0.34s steps(2) infinite alternate;
   }
@@ -375,7 +390,7 @@ body {
 }
 
 .field::placeholder {
-  color: #7d8f88;
+  color: #848b8c;
 }
 
 .field:hover {
@@ -385,7 +400,7 @@ body {
 .field:focus {
   outline: none;
   border-color: var(--anami-green);
-  box-shadow: 0 0 0 3px rgb(54 120 91 / 0.15);
+  box-shadow: 0 0 0 3px rgb(19 116 126 / 0.15);
 }
 
 .field[aria-invalid="true"] {
@@ -430,7 +445,7 @@ body {
 }
 
 .service-dialog::backdrop {
-  background: rgb(11 31 26 / 0.72);
+  background: rgb(9 30 33 / 0.72);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }

@@ -13,13 +13,13 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
     <section
       id={sectionIds.contact}
       aria-labelledby="contact-title"
-      className="on-light relative overflow-hidden bg-[linear-gradient(180deg,var(--anami-mist)_0%,#f4f8f3_100%)] py-20 text-ink sm:py-24 lg:py-28"
+      className="on-light relative overflow-hidden bg-[linear-gradient(180deg,var(--anami-mist)_0%,#f3f8f5_100%)] py-20 text-ink sm:py-24 lg:py-28"
     >
       <FacadeSketch variant="contact" className="max-md:top-4 md:top-[4%]" />
       {/* Phones: soft mist veil on the left so the headline and intro read cleanly over the office */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[40rem] bg-[linear-gradient(90deg,rgb(237_243_236/0.9)_0%,rgb(237_243_236/0.75)_45%,rgb(237_243_236/0)_80%)] [mask-image:linear-gradient(180deg,#000_65%,transparent)] md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[40rem] bg-[linear-gradient(90deg,rgb(237_243_243/0.9)_0%,rgb(237_243_243/0.75)_45%,rgb(237_243_243/0)_80%)] [mask-image:linear-gradient(180deg,#000_65%,transparent)] md:hidden"
       />
 
       <div className="container-x relative">
@@ -110,7 +110,7 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
 
           {/* Map */}
           <div data-reveal-item data-reveal-clip className="relative md:col-span-2 xl:col-span-1">
-            <div className="relative aspect-[4/3.3] overflow-hidden border border-white bg-mist-deep shadow-[0_24px_50px_-35px_rgb(16_42_36/0.5)] md:aspect-[16/7] xl:aspect-auto xl:h-full xl:min-h-[21rem]">
+            <div className="relative aspect-[4/3.3] overflow-hidden border border-white bg-mist-deep shadow-[0_24px_50px_-35px_rgb(14_42_46/0.5)] md:aspect-[16/7] xl:aspect-auto xl:h-full xl:min-h-[21rem]">
               <LocationMap title={c.map.title} imageAlt={c.map.imageAlt} activateLabel={c.map.activate} />
               <div className="pointer-events-none absolute left-2 top-2 flex min-h-[5.9rem] w-[17rem] max-w-[calc(100%-1rem)] items-start gap-2.5 bg-white px-4 py-3.5 text-[0.8125rem] leading-[1.35] text-ink shadow-md">
                 <MapPin aria-hidden="true" size={22} strokeWidth={0} fill="var(--anami-green)" className="shrink-0" />

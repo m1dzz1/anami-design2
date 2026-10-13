@@ -10,7 +10,7 @@ export default function About({ t }: { t: Dictionary }) {
     <section
       id={sectionIds.about}
       aria-labelledby="about-title"
-      className="relative overflow-hidden bg-[linear-gradient(160deg,var(--anami-forest)_0%,#173a30_45%,var(--anami-ink)_100%)] py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[linear-gradient(160deg,var(--anami-forest)_0%,#17323a_45%,var(--anami-ink)_100%)] py-16 sm:py-20 lg:py-24"
     >
       {/* Restrained architectural lines */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-[calc(var(--gutter)*0.5)] w-px bg-white/[0.05]" />
@@ -48,7 +48,7 @@ export default function About({ t }: { t: Dictionary }) {
               alt={a.imageMainAlt}
               fill
               sizes="(min-width: 1024px) 34vw, 75vw"
-              className="object-cover object-[35%_55%]"
+              className="object-cover object-[50%_50%]"
             />
           </div>
 
@@ -64,14 +64,14 @@ export default function About({ t }: { t: Dictionary }) {
               alt={a.imageInteriorAlt}
               fill
               sizes="(min-width: 1024px) 28vw, 62vw"
-              className="object-cover object-[30%_50%]"
+              className="object-cover object-[45%_50%]"
             />
           </div>
 
           {/* Caption card */}
           <div
             data-reveal-caption
-            className="absolute bottom-[8%] left-[-0.75rem] hidden bg-ink/80 py-4 pl-6 pr-8 backdrop-blur-sm sm:block lg:left-[-1.5rem]"
+            className="absolute bottom-[8%] left-[-0.75rem] hidden bg-ink/90 py-4 pl-6 pr-8 sm:block lg:bg-ink/80 lg:backdrop-blur-sm lg:left-[-1.5rem]"
           >
             <span aria-hidden="true" className="absolute -bottom-6 left-0 top-[-1.5rem] w-px bg-white/70" />
             <p className="text-[0.8125rem] leading-[1.4] text-white/90">

@@ -46,7 +46,7 @@ const line = (...pts: V3[]) => `M${pts.map((v) => fmt(project(v))).join(" L")}`;
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
 /** Axis-aligned box: draws the faces turned towards the camera. */
-function Box({ min: [x0, y0, z0], max: [x1, y1, z1], front = "#eef3ee", side = "#e2eae3", cap = "#fff", edge, className }: { min: V3; max: V3; front?: string; side?: string; cap?: string; edge?: number; className?: string }) {
+function Box({ min: [x0, y0, z0], max: [x1, y1, z1], front = "#eef3f1", side = "#e2eae7", cap = "#fff", edge, className }: { min: V3; max: V3; front?: string; side?: string; cap?: string; edge?: number; className?: string }) {
   const capY = y1 < 0 ? y1 : y0 > 0 ? y0 : null; // top seen from above, bottom from below
   return (
     <g className={className} strokeOpacity={edge}>
@@ -63,11 +63,11 @@ function Box({ min: [x0, y0, z0], max: [x1, y1, z1], front = "#eef3ee", side = "
    the modelling, and each person varies only in tone and hair style.
    -------------------------------------------------------------------------- */
 
-const SKIN = ["#f6f9f5", "#e1ebe0", "#cfdfd2"]; // mist tints
-const HAIR = ["#102a24", "#1d4538", "#2b6149", "#4d615a"]; // ink, forest, green-deep, muted
-const SHIRT = ["#36785b", "#a7c8ae", "#ffffff", "#1d4538", "#2b6149", "#e1ebe0"]; // green, mint, white, forest, green-deep, mist-deep
-const TROUSERS = ["#102a24", "#1d4538", "#4d615a"];
-const SHOES = "#0b1f1a"; // ink-deep
+const SKIN = ["#f5f9f6", "#dfe9ea", "#cfdfda"]; // mist tints
+const HAIR = ["#0e2a2e", "#17434a", "#0f5c64", "#5a6465"]; // ink, forest, green-deep, muted
+const SHIRT = ["#13747e", "#9ccacd", "#ffffff", "#17434a", "#0f5c64", "#dfe9ea"]; // green, mint, white, forest, green-deep, mist-deep
+const TROUSERS = ["#0e2a2e", "#17434a", "#5a6465"];
+const SHOES = "#091e21"; // ink-deep
 type HairStyle = "short" | "long" | "bun";
 const HAIR_STYLES: HairStyle[] = ["short", "long", "short", "bun", "long", "short"];
 
@@ -156,16 +156,16 @@ function workstation(x: number, f: number, key: string, delay: string, seed: num
         {/* Desk, monitor on its stand (screen faces the person and the viewer), keyboard, papers and a mug */}
         <path d={[line([x - 16, f, z + 38], [x - 16, f + 28, z + 38]), line([x + 16, f, z + 38], [x + 16, f + 28, z + 38])].join(" ")} strokeOpacity="0.3" />
         <Box min={[x - 18, f + 28, z + 12]} max={[x + 18, f + 31, z + 40]} />
-        <Box min={[x - 4, f + 31, z + 32]} max={[x + 4, f + 32, z + 37]} front="#d3ddd4" side="#c7d3c9" cap="#dfe9e1" edge={0.2} />
+        <Box min={[x - 4, f + 31, z + 32]} max={[x + 4, f + 32, z + 37]} front="#d3ddd9" side="#c7d3cf" cap="#dfe9e6" edge={0.2} />
         <path d={line([x, f + 32, z + 34], [x, f + 35, z + 34])} strokeOpacity="0.4" />
-        <Box min={[x - 11, f + 35, z + 33]} max={[x + 11, f + 50, z + 35]} front="#dfe9e1" side="#d3ddd4" cap="#dfe9e1" />
+        <Box min={[x - 11, f + 35, z + 33]} max={[x + 11, f + 50, z + 35]} front="#dfe9e6" side="#d3ddd9" cap="#dfe9e6" />
         <path className="worker-screen" d={poly([x - 10, f + 36, z + 33], [x + 10, f + 36, z + 33], [x + 10, f + 49, z + 33], [x - 10, f + 49, z + 33])} fill="var(--anami-mint)" strokeOpacity="0" style={{ animationDelay: delay }} />
-        <path d={poly([x - 7, f + 31, z + 17], [x + 7, f + 31, z + 17], [x + 7, f + 31, z + 23], [x - 7, f + 31, z + 23])} fill="#dfe9e1" strokeOpacity="0.3" />
+        <path d={poly([x - 7, f + 31, z + 17], [x + 7, f + 31, z + 17], [x + 7, f + 31, z + 23], [x - 7, f + 31, z + 23])} fill="#dfe9e6" strokeOpacity="0.3" />
         <path d={poly([x - 16, f + 31.2, z + 20], [x - 9, f + 31.2, z + 19], [x - 9, f + 31.2, z + 27], [x - 16, f + 31.2, z + 28])} fill="#fff" strokeOpacity="0.25" />
-        <Box min={[x + 12, f + 31, z + 20]} max={[x + 15, f + 35, z + 23]} front="#fff" side="#e8efe9" cap={shade(look.shirt, 0.7)} edge={0.3} />
+        <Box min={[x + 12, f + 31, z + 20]} max={[x + 15, f + 35, z + 23]} front="#fff" side="#e8efed" cap={shade(look.shirt, 0.7)} edge={0.3} />
         {/* Chair base and column */}
         <path d={[line([x - 8, f, z], [x + 8, f, z]), line([x, f, z - 8], [x, f, z + 8]), line([x, f, z], [x, f + 16, z])].join(" ")} strokeOpacity="0.35" />
-        <Box min={[x - 7, f + 16, z - 7]} max={[x + 7, f + 19, z + 7]} cap="#e8efe9" />
+        <Box min={[x - 7, f + 16, z - 7]} max={[x + 7, f + 19, z + 7]} cap="#e8efed" />
         {/* Person — shoes, shins, thighs on the seat */}
         {[x - 4.6, x + 0.6].map((x0) => (
           <g key={x0}>
@@ -182,7 +182,7 @@ function workstation(x: number, f: number, key: string, delay: string, seed: num
         <Head at={[x, f + 51, z]} look={look} delay={delay} />
         {/* Backrest between the person and the viewer */}
         <path d={line([x, f + 19, z - 8.5], [x, f + 21, z - 8.5])} strokeOpacity="0.35" />
-        <Box min={[x - 7, f + 21, z - 10]} max={[x + 7, f + 36, z - 7]} front="#dde6de" side="#d3ddd4" cap="#e8efe9" />
+        <Box min={[x - 7, f + 21, z - 10]} max={[x + 7, f + 36, z - 7]} front="#dde6e3" side="#d3ddd9" cap="#e8efed" />
       </g>
     ),
   };
@@ -196,10 +196,10 @@ function copier(x: number, f: number, key: string, delay: string, seed: number):
     depth: depthOf([x, f, z]),
     node: (
       <g key={key}>
-        <Box min={[x - 14, f, 30]} max={[x + 14, f + 36, 58]} front="#f4f7f4" side="#e2eae3" cap="#fbfdfb" />
+        <Box min={[x - 14, f, 30]} max={[x + 14, f + 36, 58]} front="#f4f7f6" side="#e2eae7" cap="#fbfdfc" />
         {/* Paper drawers, lid and control strip */}
         <path d={[line([x - 14, f + 8, 30], [x + 14, f + 8, 30]), line([x - 14, f + 18, 30], [x + 14, f + 18, 30])].join(" ")} strokeOpacity="0.25" />
-        <Box min={[x - 14, f + 36, 30]} max={[x + 14, f + 39, 58]} front="#dfe9e1" side="#d3ddd4" cap="#eef3ee" />
+        <Box min={[x - 14, f + 36, 30]} max={[x + 14, f + 39, 58]} front="#dfe9e6" side="#d3ddd9" cap="#eef3f1" />
         <path className="worker-screen" style={{ animationDelay: delay }} d={poly([x - 12, f + 30, 30], [x - 2, f + 30, 30], [x - 2, f + 33, 30], [x - 12, f + 33, 30])} fill="var(--anami-mint)" strokeOpacity="0" />
         {/* Output tray with copies */}
         <Box min={[x + 14, f + 18, 34]} max={[x + 24, f + 21, 54]} cap="#fff" />
@@ -229,7 +229,7 @@ function plant(x: number, f: number, key: string): Item {
     depth: depthOf([x, f, 20]),
     node: (
       <g key={key}>
-        <Box min={[x - 5, f, 15]} max={[x + 5, f + 16, 25]} front="#fff" side="#eef3ee" cap="#dfe9e1" />
+        <Box min={[x - 5, f, 15]} max={[x + 5, f + 16, 25]} front="#fff" side="#eef3f1" cap="#dfe9e6" />
         <path
           d={`M${px} ${py} c${-12 * s} ${-10 * s} ${-12 * s} ${-22 * s} ${-4 * s} ${-30 * s} M${px} ${py} c${10 * s} ${-12 * s} ${12 * s} ${-20 * s} ${7 * s} ${-32 * s} M${px} ${py} l${s} ${-28 * s}`}
           stroke="var(--anami-green)"
@@ -267,10 +267,10 @@ function Storey({ k }: { k: number }) {
     <g>
       {/* Room shell: back wall, far end wall, and the ceiling (from below) or floor (from above) */}
       <g strokeOpacity="0.12">
-        <path d={poly([0, f, ROOM], [WIDTH, f, ROOM], [WIDTH, c, ROOM], [0, c, ROOM])} fill="#f1f6f0" />
-        <path d={poly([WIDTH, f, 0], [WIDTH, f, ROOM], [WIDTH, c, ROOM], [WIDTH, c, 0])} fill="#e6eee6" />
-        {c > 0 && <path d={poly([0, c, 0], [WIDTH, c, 0], [WIDTH, c, ROOM], [0, c, ROOM])} fill="#e9f0e9" />}
-        {f < 0 && <path d={poly([0, f, 0], [WIDTH, f, 0], [WIDTH, f, ROOM], [0, f, ROOM])} fill="#fafcf9" />}
+        <path d={poly([0, f, ROOM], [WIDTH, f, ROOM], [WIDTH, c, ROOM], [0, c, ROOM])} fill="#f0f6f2" />
+        <path d={poly([WIDTH, f, 0], [WIDTH, f, ROOM], [WIDTH, c, ROOM], [WIDTH, c, 0])} fill="#e6eeea" />
+        {c > 0 && <path d={poly([0, c, 0], [WIDTH, c, 0], [WIDTH, c, ROOM], [0, c, ROOM])} fill="#e9f0ed" />}
+        {f < 0 && <path d={poly([0, f, 0], [WIDTH, f, 0], [WIDTH, f, ROOM], [0, f, ROOM])} fill="#f9fcfa" />}
         {/* Ceiling light strips */}
         {c > 0 &&
           [80, 240].map((x) => (
@@ -292,7 +292,7 @@ export default function OfficeCutaway({ shade }: { shade: string }) {
   return (
     <g strokeLinejoin="round" strokeLinecap="round">
       {/* Storeys without people further down (mostly behind the map) — plain structure */}
-      <path d={poly([0, ground, 0], [WIDTH, ground, 0], [WIDTH, level(PEOPLE_FLOORS), 0], [0, level(PEOPLE_FLOORS), 0])} fill="#eef3ee" strokeOpacity="0" />
+      <path d={poly([0, ground, 0], [WIDTH, ground, 0], [WIDTH, level(PEOPLE_FLOORS), 0], [0, level(PEOPLE_FLOORS), 0])} fill="#eef3f1" strokeOpacity="0" />
 
       <g className="facade-people" strokeOpacity="0.5">
         {[...above, ...below, ...atEye].map((k) => (
@@ -303,7 +303,7 @@ export default function OfficeCutaway({ shade }: { shade: string }) {
       {/* Open facade: slab edges, columns, roof edge */}
       <g strokeOpacity="0.3">
         {range(FLOORS + 1).map((k) => (
-          <Box key={k} min={[0, level(k) - 5, 0]} max={[WIDTH, level(k) + (k === 0 ? 8 : 0), 3]} front="#dbe5dc" side="#cfdbd1" cap="#eef3ee" />
+          <Box key={k} min={[0, level(k) - 5, 0]} max={[WIDTH, level(k) + (k === 0 ? 8 : 0), 3]} front="#dbe5e1" side="#cfdbd7" cap="#eef3f1" />
         ))}
         {[0, 160, WIDTH].map((x) => (
           <path key={x} d={line([x, ground, 0], [x, ROOF, 0])} strokeWidth="2" strokeOpacity="0.28" />

@@ -14,15 +14,15 @@ export default function Footer({ lang, t }: { lang: Locale; t: Dictionary }) {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[linear-gradient(180deg,var(--anami-ink)_0%,var(--anami-ink-deep)_100%)] text-white">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-[calc(var(--gutter)*0.5)] w-px bg-white/[0.05]" />
+    <footer className="on-light relative overflow-hidden bg-white text-ink">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-[calc(var(--gutter)*0.5)] w-px bg-ink/[0.06]" />
       <div className="container-x">
         <div className="grid gap-10 py-14 md:grid-cols-[minmax(0,1fr)_auto] md:items-center xl:grid-cols-[auto_1fr_auto] xl:gap-12 xl:py-12">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
             <a href={`#${sectionIds.home}`} aria-label={t.a11y.homeLink} className="text-[2.1rem] sm:text-[2.4rem]">
-              <Logo />
+              <Logo variant="color" />
             </a>
-            <p className="text-[0.875rem] leading-[1.4] text-white/75">
+            <p className="text-[0.875rem] leading-[1.4] text-muted">
               <span className="block">{t.footer.tagline[0]}</span>
               <span className="block">{t.footer.tagline[1]}</span>
             </p>
@@ -32,7 +32,7 @@ export default function Footer({ lang, t }: { lang: Locale; t: Dictionary }) {
             <ul className="flex flex-wrap gap-x-9 gap-y-2">
               {links.map((link) => (
                 <li key={link.id}>
-                  <a href={`#${link.id}`} className="link-line inline-block py-2 text-[0.875rem] text-white/80 transition-colors hover:text-white">
+                  <a href={`#${link.id}`} className="link-line inline-block py-2 text-[0.875rem] text-ink/75 transition-colors hover:text-ink">
                     {link.label}
                   </a>
                 </li>
@@ -42,18 +42,18 @@ export default function Footer({ lang, t }: { lang: Locale; t: Dictionary }) {
 
           <div className="flex items-center gap-8">
             <LanguageSwitcher lang={lang} label={t.a11y.language} />
-            <span aria-hidden="true" className="h-6 w-px bg-white/40" />
+            <span aria-hidden="true" className="h-6 w-px bg-ink/25" />
             <a
               href={`#${sectionIds.home}`}
               aria-label={t.a11y.backToTop}
-              className="group grid size-16 place-items-center rounded-full border border-white/50 transition-colors duration-500 hover:border-mint hover:bg-mint hover:text-ink"
+              className="group grid size-16 place-items-center rounded-full border border-ink/30 transition-colors duration-500 hover:border-green hover:bg-green hover:text-white"
             >
               <ArrowUp aria-hidden="true" size={20} strokeWidth={1.5} className="transition-transform duration-500 ease-out-expo group-hover:-translate-y-1" />
             </a>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-white/15 py-6 text-[0.8125rem] text-white/60 sm:flex-row sm:justify-between">
+        <div className="flex flex-col gap-2 border-t border-ink/10 py-6 text-[0.8125rem] text-muted sm:flex-row sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. {t.footer.rights}
           </p>

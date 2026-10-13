@@ -36,17 +36,17 @@ The temporary wordmark lives in `src/components/Logo.tsx`. Replace its contents 
 
 | File | Use |
 |---|---|
-| anami-hero-background | Hero fullscreen background |
-| anami-hero-featured-building | Hero glass panel |
-| anami-about-main-building | About — main image |
+| anami-hero-lobby (+ -mobile portrait crop) | Hero fullscreen background (art-directed `<picture>` in Hero.tsx) |
+| anami-entrance | Hero glass panel |
+| anami-reception | About — main image |
 | anami-about-nature-background | About — trees/sky, behind the composition |
-| anami-about-office-interior | About — overlapping interior |
-| anami-service-development / -leasing / -management | Service cards |
+| anami-office-open | About — overlapping interior |
+| anami-service-development / anami-office-terrace / anami-office-corridor | Service cards (development / leasing / management) |
 | anami-editorial-architecture | "Više od prostora" section |
 
-Note: in the original upload, `anami-partner-2.png` was the office interior and `anami-partner-3.png` was the nature
-photo, the reverse of what the brief described. They were named by what they actually show.
-The photographs are design placeholders, not completed ANAMI projects.
+Lobby, entrance, reception and office photos are real ANAMI photographs from the client (Drive: Anami Docs → Sajt →
+Slike Zemun / Slike Progres), resized and re-encoded with EXIF/GPS stripped. The nature, development and editorial
+images are still design placeholders.
 
 ## Pending third-party configuration
 

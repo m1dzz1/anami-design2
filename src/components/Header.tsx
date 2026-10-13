@@ -102,22 +102,18 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
   return (
     <>
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-500 ease-out-expo ${
-        open
-          ? "border-white/10 bg-ink"
-          : solid
-            ? "border-white/10 bg-ink/80 backdrop-blur-md"
-            : "border-transparent bg-transparent"
+      className={`on-light fixed inset-x-0 top-0 z-50 border-b bg-white text-ink transition-[border-color,box-shadow] duration-500 ease-out-expo ${
+        solid ? "border-ink/10 shadow-[0_8px_24px_-16px_rgb(14_42_46/0.35)]" : "border-transparent"
       }`}
     >
       <div className="nav-enter container-x flex h-[var(--nav-h)] items-center justify-between gap-6">
         <a
           href={`#${sectionIds.home}`}
           aria-label={t.a11y.homeLink}
-          className="relative z-10 text-[1.5rem] text-white sm:text-[1.9rem] lg:text-[2.15rem]"
+          className="relative z-10 text-[1.6rem] sm:text-[2rem] lg:text-[2.4rem]"
           onClick={() => setOpen(false)}
         >
-          <Logo />
+          <Logo variant="color" />
         </a>
 
         <nav aria-label={t.a11y.mainNav} className="hidden lg:block">
@@ -128,7 +124,7 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
                   href={`#${item.id}`}
                   aria-current={active === item.id ? "true" : undefined}
                   className={`link-line inline-block py-2 text-[0.875rem] tracking-[0.02em] transition-colors duration-300 ${
-                    active === item.id ? "font-semibold text-white" : "text-white/80 hover:text-white"
+                    active === item.id ? "font-semibold text-ink" : "text-ink/75 hover:text-ink"
                   }`}
                 >
                   {t.nav[item.key]}
@@ -140,13 +136,13 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
 
         <div className="hidden items-center gap-7 lg:flex">
           <LanguageSwitcher lang={lang} label={t.a11y.language} />
-          <span aria-hidden="true" className="h-5 w-px bg-white/60" />
+          <span aria-hidden="true" className="h-5 w-px bg-ink/30" />
         </div>
 
         <button
           ref={toggleRef}
           type="button"
-          className="relative z-10 -mr-2 grid size-12 place-items-center text-white lg:hidden"
+          className="relative z-10 -mr-2 grid size-12 place-items-center text-ink lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? t.a11y.closeMenu : t.a11y.openMenu}
@@ -166,7 +162,7 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_70%_at_100%_0%,rgb(54_120_91/0.35),transparent_60%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_70%_at_100%_0%,rgb(19_116_126/0.35),transparent_60%)]"
         />
         <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-[var(--gutter)] w-px bg-white/10" />
         <div className="container-x relative flex h-full flex-col pb-10 pt-[calc(var(--nav-h)+2.5rem)]">

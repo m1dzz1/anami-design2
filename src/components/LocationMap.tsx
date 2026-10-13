@@ -57,7 +57,7 @@ export default function LocationMap({ title, imageAlt, activateLabel }: { title:
         className="object-cover transition-transform duration-[1.2s] ease-out-expo group-hover:scale-[1.03]"
       />
       {/* Location pin — the static map is centred on the address */}
-      <span aria-hidden="true" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full drop-shadow-[0_6px_8px_rgb(16_42_36/0.35)]">
+      <span aria-hidden="true" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full drop-shadow-[0_6px_8px_rgb(14_42_46/0.35)]">
         <MapPin size={42} strokeWidth={1.25} fill="var(--anami-green)" className="text-white" />
       </span>
       <span className="absolute left-1/2 top-[calc(50%+1rem)] inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap bg-white/92 px-3.5 py-2 text-[0.75rem] font-semibold text-ink opacity-0 shadow-md transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">

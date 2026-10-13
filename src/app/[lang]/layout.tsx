@@ -15,7 +15,7 @@ const display = Barlow_Condensed({
 
 const sans = Manrope({
   subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600", "700"],
+  // Variable font — one file covers every weight instead of five
   variable: "--font-manrope",
   display: "swap",
 });
@@ -27,7 +27,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: "#102A24",
+  themeColor: "#0E2A2E",
   colorScheme: "dark light",
 };
 

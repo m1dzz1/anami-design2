@@ -39,20 +39,22 @@ export const sectionIds = {
 } as const;
 
 export const images = {
-  heroBackground: { src: "/images/anami-hero-background.png", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoMAAcAA4BaJZQCdIIjExqdoAD+75EOkXoTjillukZebMw9qgLwcZW1bIMI5riBff92vyi9oAA=" },
-  heroFeatured: { src: "/images/anami-hero-featured-building.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoMAAkAAoBCJQBOgBuEYO5BkAD+75ipoPTILCuBXovCayokFmWfz1GoRFVTJLqXfOetuWXwz/2nvjn3Pn8n8HPfQsM6POTTFbv4MAAA" },
-  aboutMain: { src: "/images/anami-about-main-building.webp", width: 1122, height: 1402, blur: "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoKAAwAAoBCJYgCdAEXfn5bUZICgAD+75pb5yTrjnYL+ALHHgHeEdb3HwcLWIhV5rxFy7BLeY4+pU7wXPqKzEUfLRcAvg4YbHAFS+KSHHrAeFhAj5BQc/WgAAA=" },
+  heroBackground: { src: "/images/anami-hero-lobby.webp", width: 2400, height: 1800, blur: "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoMAAkAA4BaJZACdAYs3c9G/vpAAP724yYnWIg0X1u3OjQzZ/fihN1yVB9b9zAndoM7KbddzVE0StF12EwGvidnlM4DlHn6IAAAAA==" },
+  // Portrait crop of the same lobby photograph, served to phones (art direction in Hero.tsx)
+  heroBackgroundMobile: { src: "/images/anami-hero-lobby-mobile.webp", width: 1200, height: 1600, blur: "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoMABAAA4BaJQBWACPtDMag+OAA/vNe6b2Q6AZb0Y3kz7uPo4OqNLNO4X0W+2S2ovFN49bUu+Va48TOfW5UejtGY9wBA2M86CGOV3Zn2yDQxRtcUmiMALSQIAA=" },
+  heroFeatured: { src: "/images/anami-entrance.webp", width: 1600, height: 980, blur: "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAwAgCdASoMAAcAA4BaJYwCdEf/geH1pdOAWAD+hBovN7dxS1hRlJJ2esJcCR7yrmlCWTuKSZfLAg44nyGDcCCfNxe0EDUGJ4AAAA==" },
+  aboutMain: { src: "/images/anami-reception.webp", width: 1200, height: 1500, blur: "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAQCdASoMAA8AA4BaJQAAS6SHAEYAAP7QaIuLBknzHSUDBwigcG656XgL7PxwCrjMCMJ34h83Y33Qg1uP7ZL8qXX5YgqFWIFPAZAmLQwAAA==" },
   aboutNature: { src: "/images/anami-about-nature-background.webp", width: 1403, height: 1121, blur: "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoMAAoAAoBCJYgCdAC9ighZRLAA/s4E/LHHfyslfXy6Lwq1UI5kRgtQlcA0BtY3SAgkvJc19hK3bm1x7UjowJue2neMBkwAAAA=" },
-  aboutInterior: { src: "/images/anami-about-office-interior.webp", width: 1536, height: 1024, blur: "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoMAAgAAoBCJYgCdADcrrCF3gAA/k0OMvWlr8PQwMhS9bU7t+Gm9zAUi5fn8mqqs4tcrPi6bno2YY8NEqxgigI+2mOoqAAA" },
+  aboutInterior: { src: "/images/anami-office-open.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAQCdASoMAAkAA4BaJZQAAmaq0oAA+FGFEF0xqg3EwufdH5Ec9ji0kwyc191XlaatZ3Dldx1JY/iXTmG/dCnNZl+gQAAA" },
   serviceDevelopment: { src: "/images/anami-service-development.webp", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoMAAcAAoBCJZgCdH8AE7354bjEAAD+zRnhEHRMX0+XMS09OGQOV6/EXYxN1TYFmy2Ozvd8ABwvJfqyRh2dJF91wuqKjCgo4LK4UItvYEzxgAAA" },
-  serviceLeasing: { src: "/images/anami-service-leasing.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAACwAQCdASoMAAkAAoBCJZgCdADg+Y46APvrD9ZUf7UrlEfge1cidCw7r4u1yN971lv7z1rzFEvXM0NaOYTwn3/a14tOyaw4CPIWlUutsLCyZnEYskvcAAAA" },
-  serviceManagement: { src: "/images/anami-service-management.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoMAAkAAoBCJZgCdAYstae1AF3AAP7mzIX6EfDYfFqI9Wfs3CAQbQi5forw+D280oeSqfgw8RNXnMkb5zXpNZKbchq9Ns5ygCbc+ZV6jTOJ85AA" },
+  serviceLeasing: { src: "/images/anami-office-terrace.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoMAAkAA4BaJZQAAxPwpDfmjTAA/fBfGPwloxoGqW4Bp8DQWdOeIpR0KmkQIQkiyYnW2xziefwueKDiRN8P4gAA" },
+  serviceManagement: { src: "/images/anami-office-corridor.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoMAAkAA4BaJQBdgCHhPEDPQ9gA/PYDpIQDx4E5GgLtTuStMXOyTrlYi3F70gd6kPb3PnHKVj6Ww+AA" },
   // Static preview rendered from OpenStreetMap tiles (© OpenStreetMap contributors, ODbL) — centred on site.map
   map: { src: "/images/anami-map.webp", width: 1600, height: 1000, blur: "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADwAQCdASoMAAgAAoBCJZQC7AELXYpkCAAA/vfweChSRlgfOztsM/WB7GYfQAAA" },
   editorial: { src: "/images/anami-editorial-architecture.webp", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoMAAcAAoBCJQBOgBu1VI/SYoAA/vb41SCfLbund0FWPxRNwSSc1219TssynHk8Ap00Ql1IPVPL3lBo/DKV/eCoaXQDssIbzQAAAA==" },
 } as const;
 
-/** Social-share image (1200×630, cropped from the hero photograph). */
+/** Social-share image (1200×630, cropped from the hero lobby photograph). */
 export const ogImage = { src: "/images/anami-og.jpg", width: 1200, height: 630 } as const;
 
 export type ServiceKey = "development" | "leasing" | "management";

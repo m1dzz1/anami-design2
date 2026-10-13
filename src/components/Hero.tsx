@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import type { Dictionary } from "@/i18n/types";
 import { images, sectionIds, serviceAnchor, type ServiceKey } from "@/content/site";
@@ -7,6 +7,9 @@ const heroServiceKeys: ServiceKey[] = ["development", "leasing", "management"];
 
 export default function Hero({ t }: { t: Dictionary }) {
   const h = t.hero;
+  const bg = { alt: h.backgroundAlt, fill: true, quality: 70, loading: "eager" } as const;
+  const { srcSet: mobileSrcSet } = getImageProps({ ...bg, src: images.heroBackgroundMobile.src, sizes: "75svh" }).props;
+  const { props: heroImg } = getImageProps({ ...bg, src: images.heroBackground.src, sizes: "(max-aspect-ratio: 4/3) 134vh, 100vw" });
 
   return (
     <section
@@ -16,18 +19,20 @@ export default function Hero({ t }: { t: Dictionary }) {
     >
       {/* Background photograph */}
       <div data-hero-bg className="absolute inset-0 -z-10">
-        <Image
-          src={images.heroBackground.src}
-          alt={h.backgroundAlt}
-          fill
-          preload
-          sizes="(max-aspect-ratio: 16/9) 178vh, 100vw"
-          className="hero-bg object-cover object-[64%_50%] lg:object-[58%_50%]"
-        />
-        {/* Darkening overlay — deeper behind the headline and the service strip, lighter over the building */}
+        {/* Art direction: portrait screens (phones) get a portrait crop instead of a huge landscape file */}
+        <picture>
+          <source media="(max-aspect-ratio: 1/1)" srcSet={mobileSrcSet} sizes="75svh" />
+          <img
+            {...heroImg}
+            alt={h.backgroundAlt}
+            fetchPriority="high"
+            className="hero-bg object-cover object-[50%_50%] [@media(min-aspect-ratio:1/1)]:object-[68%_50%]"
+          />
+        </picture>
+        {/* Darkening overlay — deeper behind the headline and the service strip, lighter over the lobby arch */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(11_31_26/0.78)_0%,rgb(11_31_26/0.55)_38%,rgb(11_31_26/0.3)_70%,rgb(11_31_26/0.4)_100%)] max-lg:bg-[linear-gradient(180deg,rgb(11_31_26/0.6)_0%,rgb(11_31_26/0.5)_50%,rgb(11_31_26/0.82)_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(9_30_33/0.86)_0%,rgb(9_30_33/0.66)_38%,rgb(9_30_33/0.32)_70%,rgb(9_30_33/0.42)_100%)] max-lg:bg-[linear-gradient(180deg,rgb(9_30_33/0.72)_0%,rgb(9_30_33/0.7)_55%,rgb(9_30_33/0.88)_100%)]"
         />
         <div
           aria-hidden="true"

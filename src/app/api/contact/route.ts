@@ -99,18 +99,18 @@ function thankYouEmail(input: ContactInput, lang: Lang) {
   const name = escapeHtml(input.name);
   const address = site.address;
   const html = `
-<div style="background:#edf3ec;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#102a24">
+<div style="background:#edf3f3;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#0e2a2e">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;padding:36px 32px">
-    <p style="margin:0 0 28px;font-size:20px;letter-spacing:6px;color:#102a24">ANAMI</p>
+    <p style="margin:0 0 28px;font-size:20px;letter-spacing:6px;color:#0e2a2e">ANAMI</p>
     <p style="margin:0 0 16px;font-size:16px;line-height:1.6">${copy.greeting(name)}</p>
     ${copy.body.map((line) => `<p style="margin:0 0 12px;font-size:16px;line-height:1.6">${line}</p>`).join("")}
     <p style="margin:28px 0 0;font-size:16px;line-height:1.6">${copy.signoff.join("<br>")}</p>
-    <hr style="border:0;border-top:1px solid #dfe8de;margin:32px 0 20px">
-    <p style="margin:0;font-size:13px;line-height:1.6;color:#5b6b66">
+    <hr style="border:0;border-top:1px solid #dee8e2;margin:32px 0 20px">
+    <p style="margin:0;font-size:13px;line-height:1.6;color:#646b6c">
       ${escapeHtml(address.street)}, ${escapeHtml(address.postalCode)} ${escapeHtml(address.city)}<br>
-      <a href="mailto:${site.email}" style="color:#35785c">${site.email}</a> · <a href="${site.url}" style="color:#35785c">anami.rs</a>
+      <a href="mailto:${site.email}" style="color:#13747e">${site.email}</a> · <a href="${site.url}" style="color:#13747e">anami.rs</a>
     </p>
-    <p style="margin:16px 0 0;font-size:12px;line-height:1.5;color:#8a9893">${copy.note}</p>
+    <p style="margin:16px 0 0;font-size:12px;line-height:1.5;color:#8f9596">${copy.note}</p>
   </div>
 </div>`;
   const text = [

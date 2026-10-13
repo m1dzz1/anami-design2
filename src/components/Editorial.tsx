@@ -32,7 +32,7 @@ export default function Editorial({ t }: { t: Dictionary }) {
         {/* Green-toned grade over the photo, deepening from the right edge across most of the image */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(16_42_36/0.08)_0%,rgb(16_42_36/0.3)_28%,rgb(16_42_36/0.62)_55%,rgb(16_42_36/0.86)_100%)] max-md:bg-[linear-gradient(180deg,rgb(16_42_36/0.92)_0%,rgb(16_42_36/0.6)_50%,rgb(16_42_36/0.85)_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(14_42_46/0.08)_0%,rgb(14_42_46/0.3)_28%,rgb(14_42_46/0.62)_55%,rgb(14_42_46/0.86)_100%)] max-md:bg-[linear-gradient(180deg,rgb(14_42_46/0.92)_0%,rgb(14_42_46/0.6)_50%,rgb(14_42_46/0.85)_100%)]"
         />
       </div>
 
