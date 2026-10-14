@@ -34,14 +34,14 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Active section indicator (the editorial section belongs to "Services")
+  // Active section indicator (the development sequence and the editorial section belong to "Services")
   useEffect(() => {
-    const ids = [...navItems.map((item) => item.id), sectionIds.editorial];
+    const ids = [...navItems.map((item) => item.id), sectionIds.transformation, sectionIds.editorial];
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const id = entry.target.id === sectionIds.editorial ? sectionIds.services : entry.target.id;
+          const id = entry.target.id === sectionIds.editorial || entry.target.id === sectionIds.transformation ? sectionIds.services : entry.target.id;
           setActive(id);
         }
       },

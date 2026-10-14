@@ -21,7 +21,7 @@ export default function Editorial({ t }: { t: Dictionary }) {
             alt={e.imageAlt}
             fill
             sizes="(min-width: 768px) 70vw, 100vw"
-            className="object-cover object-[30%_45%] md:object-[0%_42%]"
+            className="object-cover object-[60%_50%] md:object-[35%_50%]"
           />
         </div>
         {/* Soft blend of the photo's left edge into the ink field */}

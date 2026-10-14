@@ -31,7 +31,7 @@ export default function About({ t }: { t: Dictionary }) {
               alt={a.imageNatureAlt}
               fill
               sizes="(min-width: 1024px) 20vw, 45vw"
-              className="object-cover object-[40%_60%]"
+              className="object-cover object-[45%_100%]"
             />
             <div className="absolute inset-0 bg-ink/15" />
           </div>

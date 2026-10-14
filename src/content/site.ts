@@ -34,6 +34,7 @@ export const sectionIds = {
   home: "home",
   about: "about",
   services: "services",
+  transformation: "transformation",
   editorial: "values",
   contact: "contact",
 } as const;
@@ -44,14 +45,27 @@ export const images = {
   heroBackgroundMobile: { src: "/images/anami-hero-lobby-mobile.webp", width: 1200, height: 1600, blur: "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoMABAAA4BaJQBWACPtDMag+OAA/vNe6b2Q6AZb0Y3kz7uPo4OqNLNO4X0W+2S2ovFN49bUu+Va48TOfW5UejtGY9wBA2M86CGOV3Zn2yDQxRtcUmiMALSQIAA=" },
   heroFeatured: { src: "/images/anami-entrance.webp", width: 1600, height: 980, blur: "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAwAgCdASoMAAcAA4BaJYwCdEf/geH1pdOAWAD+hBovN7dxS1hRlJJ2esJcCR7yrmlCWTuKSZfLAg44nyGDcCCfNxe0EDUGJ4AAAA==" },
   aboutMain: { src: "/images/anami-reception.webp", width: 1200, height: 1500, blur: "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAQCdASoMAA8AA4BaJQAAS6SHAEYAAP7QaIuLBknzHSUDBwigcG656XgL7PxwCrjMCMJ34h83Y33Qg1uP7ZL8qXX5YgqFWIFPAZAmLQwAAA==" },
-  aboutNature: { src: "/images/anami-about-nature-background.webp", width: 1403, height: 1121, blur: "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoMAAoAAoBCJYgCdAC9ighZRLAA/s4E/LHHfyslfXy6Lwq1UI5kRgtQlcA0BtY3SAgkvJc19hK3bm1x7UjowJue2neMBkwAAAA=" },
+  // Detail from the stair landing above the reception — banana plant against polished plaster
+  aboutNature: { src: "/images/anami-plant-detail.webp", width: 1100, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoLAAwAA4BaJQBOgBuG5IsOgADyRG3k8oZmN6NqyoyByDdA7O98M0HGqaGmGZA+sEmixQtPivKFSGjT8AmWUAAA" },
   aboutInterior: { src: "/images/anami-office-open.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAQCdASoMAAkAA4BaJZQAAmaq0oAA+FGFEF0xqg3EwufdH5Ec9ji0kwyc191XlaatZ3Dldx1JY/iXTmG/dCnNZl+gQAAA" },
-  serviceDevelopment: { src: "/images/anami-service-development.webp", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoMAAcAAoBCJZgCdH8AE7354bjEAAD+zRnhEHRMX0+XMS09OGQOV6/EXYxN1TYFmy2Ozvd8ABwvJfqyRh2dJF91wuqKjCgo4LK4UItvYEzxgAAA" },
+  serviceDevelopment: { src: "/images/anami-building-facade.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoMAAkAA4BaJYgCdADbARHgAP4moINxYiAdeQiaYaof14df+FSHg09aOkfBn9oKMAQ9XzjISot3coAA" },
   serviceLeasing: { src: "/images/anami-office-terrace.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoMAAkAA4BaJZQAAxPwpDfmjTAA/fBfGPwloxoGqW4Bp8DQWdOeIpR0KmkQIQkiyYnW2xziefwueKDiRN8P4gAA" },
   serviceManagement: { src: "/images/anami-office-corridor.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoMAAkAA4BaJQBdgCHhPEDPQ9gA/PYDpIQDx4E5GgLtTuStMXOyTrlYi3F70gd6kPb3PnHKVj6Ww+AA" },
   // Static preview rendered from OpenStreetMap tiles (© OpenStreetMap contributors, ODbL) — centred on site.map
   map: { src: "/images/anami-map.webp", width: 1600, height: 1000, blur: "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADwAQCdASoMAAgAAoBCJZQC7AELXYpkCAAA/vfweChSRlgfOztsM/WB7GYfQAAA" },
-  editorial: { src: "/images/anami-editorial-architecture.webp", width: 1672, height: 941, blur: "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoMAAcAAoBCJQBOgBu1VI/SYoAA/vb41SCfLbund0FWPxRNwSSc1219TssynHk8Ap00Ql1IPVPL3lBo/DKV/eCoaXQDssIbzQAAAA==" },
+  editorial: { src: "/images/anami-office-green-wall.webp", width: 1800, height: 1260, blur: "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoMAAgAA4BaJZQCdADdKjUpUAD0TCv7KYUwbZRtsaUmHkEOBfgrA1R0N/tlQXUE5d1mTnTJAYYAAA==" },
+} as const;
+
+/**
+ * Scroll-driven image sequence: the same office floor going from a bare concrete shell to a finished workspace.
+ * Extracted losslessly from the source video (img/ambient-video) and encoded once at high quality:
+ * `lg` = 1920×1080 frames for landscape screens, `sm` = 864×1080 portrait crops for phones.
+ */
+export const transformationFrames = {
+  count: 81,
+  path: (set: "lg" | "sm", index: number) => `/images/transformation/${set}/${String(index + 1).padStart(3, "0")}.webp`,
+  lg: { width: 1920, height: 1080 },
+  sm: { width: 864, height: 1080 },
 } as const;
 
 /** Social-share image (1200×630, cropped from the hero lobby photograph). */

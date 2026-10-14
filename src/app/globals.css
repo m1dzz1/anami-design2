@@ -431,6 +431,165 @@ body {
   }
 }
 
+/* ==========================================================================
+   "Od ideje do useljenja" — pinned scroll-scrubbed image sequence (Transformation.tsx)
+   --p is the scroll progress through the section (0–1), written by the component.
+   ========================================================================== */
+.transformation {
+  --p: 0;
+  --intro: 0;
+  height: 340svh;
+}
+
+@media (min-width: 768px) {
+  .transformation {
+    height: 420svh;
+  }
+}
+
+/* Phones: the image takes the upper part of the screen and melts into the ink behind the copy */
+.tr-stage {
+  bottom: 34%;
+}
+
+@media (min-width: 768px) {
+  .tr-stage {
+    bottom: 0;
+  }
+}
+
+.tr-grade {
+  background:
+    linear-gradient(180deg, rgb(9 30 33 / 0.55) 0%, rgb(9 30 33 / 0) 22%),
+    linear-gradient(0deg, var(--anami-ink) 0%, rgb(14 42 46 / 0.75) 18%, rgb(14 42 46 / 0) 48%);
+}
+
+@media (min-width: 768px) {
+  .tr-grade {
+    background:
+      linear-gradient(180deg, rgb(9 30 33 / 0.6) 0%, rgb(9 30 33 / 0) 20%),
+      linear-gradient(0deg, rgb(9 30 33 / 0.6) 0%, rgb(9 30 33 / 0) 26%),
+      linear-gradient(90deg, rgb(9 30 33 / 0.88) 0%, rgb(9 30 33 / 0.62) 32%, rgb(9 30 33 / 0.08) 62%, rgb(9 30 33 / 0.3) 100%);
+  }
+}
+
+/* Stages cross-fade: the outgoing one lifts away, the incoming one rises in */
+.tr-step {
+  opacity: 0;
+  transform: translateY(1rem);
+  filter: blur(4px);
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    filter 0.6s var(--ease-out);
+}
+
+.tr-step[data-active="true"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* The lead belongs to the opening — it steps back once the build starts */
+.tr-lead {
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.transformation:not([data-stage="0"]) .tr-lead {
+  opacity: 0.6;
+}
+
+.tr-cta {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  pointer-events: none;
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    background-color 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
+}
+
+.transformation[data-stage="3"] .tr-cta,
+.tr-cta:focus-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.tr-seg {
+  transform: scaleX(clamp(0, calc(var(--p) * 4.4 - 0.2 - var(--i)), 1));
+}
+
+.tr-rail {
+  transform: scaleY(var(--p));
+}
+
+.tr-tick {
+  color: rgb(255 255 255 / 0.45);
+  transition: color 0.5s var(--ease-out);
+}
+
+.tr-tick-label {
+  opacity: 0;
+  transform: translateX(0.5rem);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.tr-tick-dot {
+  background: var(--anami-ink);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  transition:
+    background-color 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+.tr-tick[data-done="true"] .tr-tick-dot {
+  background: var(--anami-mint);
+  border-color: var(--anami-mint);
+}
+
+.tr-tick[data-active="true"] {
+  color: var(--anami-white);
+}
+
+.tr-tick[data-active="true"] .tr-tick-num {
+  color: var(--anami-mint);
+}
+
+.tr-tick[data-active="true"] .tr-tick-label {
+  opacity: 1;
+  transform: none;
+}
+
+.tr-tick[data-active="true"] .tr-tick-dot {
+  background: var(--anami-mint);
+  border-color: var(--anami-mint);
+  box-shadow: 0 0 0 5px rgb(156 202 205 / 0.18);
+}
+
+.tr-hint {
+  opacity: calc(1 - var(--intro));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tr-hint-line {
+    animation: hint-drop 1.8s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes hint-drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(200%);
+  }
+}
+
 /* Native <dialog> used for service details */
 .service-dialog {
   margin: auto;

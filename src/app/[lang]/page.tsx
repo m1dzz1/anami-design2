@@ -5,6 +5,7 @@ import { mapsLinkUrl, ogImage, serviceAnchor, site, type ServiceKey } from "@/co
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Transformation from "@/components/Transformation";
 import Services from "@/components/Services";
 import Editorial from "@/components/Editorial";
 import Contact from "@/components/Contact";
@@ -119,6 +120,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <main id="main">
         <Hero t={t} />
         <About t={t} />
+        <Transformation t={t} />
         <Services t={t} />
         <Editorial t={t} />
         <Contact lang={lang} t={t} />
