@@ -1,5 +1,5 @@
-import Image, { getImageProps } from "next/image";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { getImageProps } from "next/image";
+import { ArrowRight } from "lucide-react";
 import type { Dictionary } from "@/i18n/types";
 import { images, sectionIds, serviceAnchor, type ServiceKey } from "@/content/site";
 
@@ -8,155 +8,76 @@ const heroServiceKeys: ServiceKey[] = ["development", "leasing", "management"];
 export default function Hero({ t }: { t: Dictionary }) {
   const h = t.hero;
   const bg = { alt: h.backgroundAlt, fill: true, quality: 70, loading: "eager" } as const;
-  const { srcSet: mobileSrcSet } = getImageProps({ ...bg, src: images.heroBackgroundMobile.src, sizes: "75svh" }).props;
+  const { srcSet: mobileSrcSet } = getImageProps({ ...bg, src: images.heroBackgroundMobile.src, sizes: "100vw" }).props;
   const { props: heroImg } = getImageProps({ ...bg, src: images.heroBackground.src, sizes: "(max-aspect-ratio: 4/3) 134vh, 100vw" });
 
   return (
-    <section
-      id={sectionIds.home}
-      aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[90dvh] flex-col overflow-hidden bg-ink"
-    >
-      {/* Background photograph */}
-      <div data-hero-bg className="absolute inset-0 -z-10">
-        {/* Art direction: portrait screens (phones) get a portrait crop instead of a huge landscape file */}
+    <section id={sectionIds.home} aria-labelledby="hero-title" className="hero relative isolate flex flex-col bg-petrol-deep">
+      {/* Photograph — full-bleed on large screens, the first screen on phones (melting into petrol below) */}
+      <div data-hero-bg className="absolute inset-x-0 top-0 -z-10 h-[min(100svh,50rem)] overflow-hidden lg:inset-0 lg:h-auto">
         <picture>
-          <source media="(max-aspect-ratio: 1/1)" srcSet={mobileSrcSet} sizes="75svh" />
+          <source media="(max-aspect-ratio: 1/1)" srcSet={mobileSrcSet} sizes="100vw" />
           <img
             {...heroImg}
             alt={h.backgroundAlt}
             fetchPriority="high"
-            className="hero-bg object-cover object-[50%_50%] [@media(min-aspect-ratio:1/1)]:object-[68%_50%]"
+            className="hero-bg object-cover"
           />
         </picture>
-        {/* Darkening overlay — deeper behind the headline and the service strip, lighter over the lobby arch */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(9_30_33/0.86)_0%,rgb(9_30_33/0.66)_38%,rgb(9_30_33/0.32)_70%,rgb(9_30_33/0.42)_100%)] max-lg:bg-[linear-gradient(180deg,rgb(9_30_33/0.72)_0%,rgb(9_30_33/0.7)_55%,rgb(9_30_33/0.88)_100%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-ink-deep/80 to-transparent"
-        />
+        <div aria-hidden="true" className="hero-shade absolute inset-0" />
       </div>
 
-      <div data-hero-content className="container-x relative flex flex-1 flex-col pt-[calc(var(--nav-h)+2.5rem)] lg:pt-[calc(var(--nav-h)+4.5rem)]">
-        <div className="grid flex-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,29rem)]">
-          {/* Left — headline block */}
-          <div className="max-w-[46rem]">
-            <span aria-hidden="true" className="hero-rule mb-7 block h-px w-[4.5rem] origin-left bg-mint/80" />
-            <h1 id="hero-title" className="display display-xl">
-              <span className="hero-fade mb-5 block font-sans text-[0.6875rem] font-bold leading-[1.4] tracking-[0.22em] text-mint" style={{ animationDelay: "100ms" }}>
-                {h.kicker}
-              </span>
-              <span className="block overflow-hidden pb-[0.04em]">
-                <span className="hero-line block text-white" style={{ animationDelay: "150ms" }}>
-                  {h.titleBrand}
-                </span>
-              </span>
-              <span className="block overflow-hidden pb-[0.04em]">
-                <span className="hero-line block text-white" style={{ animationDelay: "230ms" }}>
-                  {h.titleLine1}
-                </span>
-              </span>
-              <span className="block overflow-hidden pb-[0.06em]">
-                <span className="hero-line block text-mint" style={{ animationDelay: "310ms" }}>
-                  {h.titleLine2}
-                </span>
-              </span>
+      <div className="container-x relative flex flex-1 flex-col pt-[calc(var(--nav-h)+clamp(3rem,9vh,6rem))]">
+        <div className="flex flex-1 items-center pb-10 lg:pb-14">
+          <div className="max-w-[44rem]">
+            <p className="enter kicker text-teal-light" style={{ animationDelay: "80ms" }}>
+              {h.kicker}
+            </p>
+            <h1 id="hero-title" className="enter display display-xl mt-6 text-white" style={{ animationDelay: "140ms" }}>
+              <span className="block">{h.titleBrand}</span>
+              <span className="block">{h.titleLine1}</span>
+              <span className="block text-teal-light">{h.titleLine2}</span>
             </h1>
-            <p
-              className="hero-fade mt-6 max-w-[27rem] text-[1.0625rem] leading-[1.5] text-white/92 sm:text-[1.1875rem]"
-              style={{ animationDelay: "520ms" }}
-            >
+            <p className="enter mt-6 max-w-[29rem] text-[1.0625rem] leading-[1.6] text-white/90 sm:text-[1.125rem]" style={{ animationDelay: "320ms" }}>
               {h.lead}
             </p>
-            <a
-              href={`#${sectionIds.about}`}
-              className="hero-fade btn btn-glass mt-9"
-              style={{ animationDelay: "680ms" }}
-            >
+            <a href={`#${sectionIds.about}`} className="enter btn btn-primary mt-8" style={{ animationDelay: "440ms" }}>
               {h.cta}
               <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
             </a>
           </div>
-
-          {/* Right — floating glass panel */}
-          <a
-            href={`#${sectionIds.services}`}
-            className="hero-panel glass group relative mt-2 block p-3 transition-colors duration-500 hover:bg-white/10 sm:p-4 lg:mt-6"
-            style={{ animationDelay: "600ms" }}
-          >
-            <div className="flex gap-4 max-sm:items-center sm:flex-col">
-              <div className="hero-clip relative aspect-[4/3] w-[42%] shrink-0 overflow-hidden sm:aspect-[16/7.5] sm:w-full" style={{ animationDelay: "800ms" }}>
-                <Image
-                  src={images.heroFeatured.src}
-                  alt={h.panelImageAlt}
-                  fill
-                  loading="eager"
-                  sizes="(min-width: 1024px) 28rem, (min-width: 640px) 90vw, 40vw"
-                  className="object-cover object-[50%_40%] transition-transform duration-[1.2s] ease-out-expo group-hover:scale-[1.05]"
-                />
-              </div>
-              <div className="flex flex-1 items-center justify-between gap-4 px-1 pb-1 sm:px-3 sm:pb-3 sm:pt-2">
-                <p className="text-[1.0625rem] leading-snug text-white sm:text-[1.3rem]">
-                  <span className="block">{h.panelTitle[0]}</span>
-                  <span className="block">{h.panelTitle[1]}</span>
-                  <span className="sr-only"> — {h.panelAction}</span>
-                </p>
-                <span
-                  aria-hidden="true"
-                  className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-ink transition-transform duration-500 ease-out-expo group-hover:translate-x-1 sm:size-12"
-                >
-                  <ChevronRight size={20} strokeWidth={1.75} />
-                </span>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        {/* Bottom — service navigation */}
-        <div className="mt-12 grid items-end gap-8 pb-8 lg:mt-16 lg:pb-10 xl:grid-cols-[minmax(0,1fr)_auto]" >
-          <nav aria-label={t.a11y.servicesNav} className="border-white/25 lg:border-l lg:border-t">
-            <ol className="grid sm:grid-cols-3">
-              {heroServiceKeys.map((key, index) => (
-                <li key={key} className="hero-fade border-t border-white/20 first:border-t-0 sm:border-t-0" style={{ animationDelay: `${950 + index * 120}ms` }}>
-                  <a
-                    href={`#${serviceAnchor(key)}`}
-                    className="group flex items-center gap-4 py-4 transition-colors duration-300 sm:gap-5 lg:px-7 lg:py-5"
-                  >
-                    <span className="display text-[2rem] font-medium leading-none text-mint transition-colors duration-300 group-hover:text-white lg:text-[2.4rem]">
-                      0{index + 1}
-                    </span>
-                    <span aria-hidden="true" className="h-9 w-px bg-white/40 transition-colors duration-300 group-hover:bg-mint" />
-                    <span className="whitespace-nowrap text-[0.8125rem] leading-[1.35] text-white/85 transition-colors duration-300 group-hover:text-white">
-                      <span className="block">{h.services[index].lines[0]}</span>
-                      <span className="block">{h.services[index].lines[1]}</span>
-                    </span>
-                    <ArrowRight
-                      aria-hidden="true"
-                      size={16}
-                      strokeWidth={1.5}
-                      className="ml-auto -translate-x-2 text-mint opacity-0 transition-all duration-500 ease-out-expo group-hover:translate-x-0 group-hover:opacity-100 lg:mr-2"
-                    />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          <div className="hero-fade hidden items-end gap-8 pb-1 xl:flex" style={{ animationDelay: "1300ms" }}>
-            <span aria-hidden="true" className="mb-3 h-px w-28 bg-white/35 2xl:w-56" />
-            <p className="border-l border-white/60 pl-7 text-[0.8125rem] leading-[1.45] text-white/85">
-              {h.tagline.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </p>
-          </div>
         </div>
       </div>
+
+      {/* Three areas of work */}
+      <nav aria-label={t.a11y.servicesNav} className="hero-strip relative">
+        <ol className="container-x grid lg:grid-cols-3">
+          {heroServiceKeys.map((key, index) => (
+            <li
+              key={key}
+              className="enter border-white/15 max-lg:border-b max-lg:last:border-b-0 lg:border-l lg:pl-10 lg:first:border-l-0 lg:first:pl-0 xl:pl-12"
+              style={{ animationDelay: `${640 + index * 90}ms` }}
+            >
+              <a href={`#${serviceAnchor(key)}`} className="group flex min-h-[5.5rem] items-center gap-5 py-4 lg:pr-8 lg:py-6">
+                <span className="display w-[2.4ch] shrink-0 text-[2.5rem] font-medium leading-none text-white/85 transition-colors duration-300 group-hover:text-teal-light lg:text-[3rem]">
+                  0{index + 1}
+                </span>
+                <span aria-hidden="true" className="h-10 w-px shrink-0 bg-white/25 transition-colors duration-300 group-hover:bg-teal-light" />
+                <span className="text-[0.9375rem] leading-[1.35] text-white/90 transition-colors duration-300 group-hover:text-white">
+                  <span className="block">{h.services[index].lines[0]}</span>
+                  <span className="block">{h.services[index].lines[1]}</span>
+                </span>
+                <ArrowRight
+                  aria-hidden="true"
+                  size={18}
+                  strokeWidth={1.5}
+                  className="ml-auto text-teal-light transition-transform duration-500 ease-out-expo group-hover:translate-x-1 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-visible:opacity-100"
+                />
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
     </section>
   );
 }

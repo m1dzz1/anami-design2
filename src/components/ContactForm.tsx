@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FocusEvent, type FormEvent } from "react";
-import { ArrowRight, CircleAlert, CircleCheck } from "lucide-react";
+import { ArrowRight, CircleAlert, CircleCheck, LoaderCircle } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import {
@@ -28,6 +28,8 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const ticket = useRef<{ value: string; fetchedAt: number } | null>(null);
+  // Synchronous lock: two clicks in the same tick both see the stale `status`, the ref does not
+  const inFlight = useRef(false);
 
   const loadTicket = async () => {
     try {
@@ -70,7 +72,7 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (status.kind === "sending") return;
+    if (inFlight.current) return;
 
     const form = event.currentTarget;
     const input = readForm(form);
@@ -83,6 +85,7 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
       return;
     }
 
+    inFlight.current = true;
     setStatus({ kind: "sending" });
     const honeypot = new FormData(form).get("website");
 
@@ -127,6 +130,8 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
       setStatus({ kind: "error", message });
     } catch {
       setStatus({ kind: "error", message: t.errors.server });
+    } finally {
+      inFlight.current = false;
     }
   };
 
@@ -141,18 +146,18 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
 
   const errorText = (field: ContactField) =>
     errors[field] ? (
-      <p id={`contact-${field}-error`} className="mt-2 flex items-center gap-1.5 text-[0.8125rem] font-medium text-[#a33a2c]">
+      <p id={`contact-${field}-error`} className="mt-2 flex items-center gap-1.5 text-[0.8125rem] font-medium text-[var(--error-dark)]">
         <CircleAlert aria-hidden="true" size={15} strokeWidth={2} />
         {t.errors[errors[field]!]}
       </p>
     ) : null;
 
   return (
-    <form noValidate onSubmit={onSubmit} aria-describedby="contact-privacy" className="space-y-4">
+    <form noValidate onSubmit={onSubmit} aria-describedby="contact-privacy" aria-busy={status.kind === "sending"} className="space-y-5">
       <h3 className="sr-only">{t.title}</h3>
 
       <div>
-        <label htmlFor="contact-name" className="mb-1.5 block text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-ink">
+        <label htmlFor="contact-name" className="mb-2 block text-[0.875rem] font-medium text-white/90">
           {t.name}
         </label>
         <input
@@ -168,7 +173,7 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
       </div>
 
       <div>
-        <label htmlFor="contact-email" className="mb-1.5 block text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-ink">
+        <label htmlFor="contact-email" className="mb-2 block text-[0.875rem] font-medium text-white/90">
           {t.email}
         </label>
         <input
@@ -185,7 +190,7 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
       </div>
 
       <div>
-        <label htmlFor="contact-message" className="mb-1.5 block text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-ink">
+        <label htmlFor="contact-message" className="mb-2 block text-[0.875rem] font-medium text-white/90">
           {t.message}
         </label>
         <textarea
@@ -205,25 +210,29 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
         <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <button type="submit" className="btn btn-solid w-full" disabled={status.kind === "sending"}>
+      <button type="submit" className="btn btn-primary w-full justify-between" disabled={status.kind === "sending"}>
         {status.kind === "sending" ? t.sending : t.submit}
-        <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
+        {status.kind === "sending" ? (
+          <LoaderCircle aria-hidden="true" size={18} strokeWidth={1.75} className="motion-safe:animate-spin" />
+        ) : (
+          <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
+        )}
       </button>
 
-      <p id="contact-privacy" className="text-[0.75rem] leading-[1.5] text-muted">
+      <p id="contact-privacy" className="text-[0.8125rem] leading-[1.5] text-white/70">
         {t.privacy}
       </p>
 
       <div role="status" aria-live="polite" className="min-h-0">
         {status.kind === "success" && (
-          <p className="flex items-start gap-2 border-l-2 border-green bg-white px-4 py-3 text-[0.875rem] text-ink">
-            <CircleCheck aria-hidden="true" size={18} strokeWidth={1.75} className="mt-0.5 shrink-0 text-green" />
+          <p className="flex items-start gap-2 border-l-2 border-teal-light bg-white/8 px-4 py-3 text-[0.875rem] text-white">
+            <CircleCheck aria-hidden="true" size={18} strokeWidth={1.75} className="mt-0.5 shrink-0 text-teal-light" />
             {t.success}
           </p>
         )}
         {status.kind === "error" && (
-          <p className="flex items-start gap-2 border-l-2 border-[#a33a2c] bg-white px-4 py-3 text-[0.875rem] text-ink">
-            <CircleAlert aria-hidden="true" size={18} strokeWidth={1.75} className="mt-0.5 shrink-0 text-[#a33a2c]" />
+          <p className="flex items-start gap-2 border-l-2 border-[var(--error-dark)] bg-white/8 px-4 py-3 text-[0.875rem] text-white">
+            <CircleAlert aria-hidden="true" size={18} strokeWidth={1.75} className="mt-0.5 shrink-0 text-[var(--error-dark)]" />
             {status.message}
           </p>
         )}

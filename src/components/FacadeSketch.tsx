@@ -6,6 +6,7 @@
  * office even more, so the people inside stay readable).
  *
  * - services: the main tower is built floor by floor on scroll, with a tower crane ([data-build]).
+ * - outline:  a tower and a lower wing as bare hairlines in two-point perspective, for dark surfaces (contact).
  * - contact:  an office tower with its left facade open, people at work on every floor
  *             (see OfficeCutaway.tsx, drawn lazily by LazyOfficeCutaway.tsx).
  * Other buildings are one [data-facade-part] each and "grow" out of the ground (see Motion.tsx).
@@ -13,7 +14,7 @@
 
 import LazyOfficeCutaway from "./LazyOfficeCutaway";
 
-type Variant = "services" | "contact";
+type Variant = "services" | "contact" | "outline";
 
 const BOTTOM = 1600;
 /** Storey height — every floor line runs parallel to the top edge of its own face */
@@ -161,6 +162,77 @@ function BuildingTower({ tower, id }: { tower: Tower; id: (name: string) => stri
   );
 }
 
+/* --------------------------------------------------------------------------
+   Outline — hairline buildings for dark surfaces
+   -------------------------------------------------------------------------- */
+
+/**
+ * Worm's-eye two-point perspective: every horizontal edge runs to one of two vanishing points on a low
+ * horizon, so floor lines flatten towards the ground and mullions crowd together towards the far edges.
+ */
+const HORIZON = 1500;
+const VP_LEFT = -1400;
+const VP_RIGHT = 3600;
+
+type Block = {
+  /** Near (front) corner x and its roof height */
+  x: number;
+  top: number;
+  /** Far edges of the left and right faces */
+  left: number;
+  right: number;
+  floors: number;
+  floorH: number;
+  /** Mullions per face */
+  cols: [number, number];
+};
+
+/** Point `x` on the edge leaving the corner (x0, y) towards a vanishing point */
+const along = (x0: number, y: number, vp: number, x: number) => y + (HORIZON - y) * ((x - x0) / (vp - x0));
+
+/** Equal real-world spacing seen in perspective: positions crowd towards the vanishing point */
+function mullions(x0: number, far: number, vp: number, n: number) {
+  const s = (far - x0) / (vp - x0);
+  const depth = (1 - s) / s; // distance to the vanishing point, in face widths
+  return range(n - 1).map((i) => {
+    const d = (i + 1) / n;
+    return x0 + (vp - x0) * (d / (d + depth));
+  });
+}
+
+function OutlineBlock({ b, strong = 0.2, soft = 0.1 }: { b: Block; strong?: number; soft?: number }) {
+  const ground = BOTTOM;
+  const levels = range(b.floors + 1).map((i) => b.top + i * b.floorH);
+  const lTop = along(b.x, b.top, VP_LEFT, b.left);
+  const rTop = along(b.x, b.top, VP_RIGHT, b.right);
+  return (
+    <g>
+      {/* Floor lines (the roof edge is the strong first one) */}
+      {levels.map((y, i) => (
+        <path
+          key={`f${i}`}
+          d={`M${b.left} ${along(b.x, y, VP_LEFT, b.left)} L${b.x} ${y} L${b.right} ${along(b.x, y, VP_RIGHT, b.right)}`}
+          strokeOpacity={i === 0 ? strong : soft}
+        />
+      ))}
+      {/* Mullions start at the roof edge of their own face */}
+      {mullions(b.x, b.left, VP_LEFT, b.cols[0]).map((x) => (
+        <path key={`l${x}`} d={`M${x} ${along(b.x, b.top, VP_LEFT, x)} L${x} ${ground}`} strokeOpacity={soft} />
+      ))}
+      {mullions(b.x, b.right, VP_RIGHT, b.cols[1]).map((x) => (
+        <path key={`r${x}`} d={`M${x} ${along(b.x, b.top, VP_RIGHT, x)} L${x} ${ground}`} strokeOpacity={soft} />
+      ))}
+      {/* Corners: the near one is the strongest line of the drawing */}
+      <path d={`M${b.x} ${b.top} L${b.x} ${ground}`} strokeOpacity={strong + 0.06} />
+      <path d={`M${b.left} ${lTop} L${b.left} ${ground} M${b.right} ${rTop} L${b.right} ${ground}`} strokeOpacity={strong} />
+    </g>
+  );
+}
+
+/** Tall glass tower with a lower wing standing clear of it on the left (no lines cross another volume) */
+const outlineTower: Block = { x: 1060, top: 110, left: 860, right: 1330, floors: 13, floorH: 104, cols: [7, 11] };
+const outlineWing: Block = { x: 700, top: 420, left: 520, right: 820, floors: 10, floorH: 104, cols: [6, 5] };
+
 /* -------------------------------------------------------------------------- */
 
 /** Services tower (worm's-eye perspective, as in the reference) */
@@ -174,7 +246,7 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
       aria-hidden="true"
       data-facade
       viewBox="0 0 1774 834"
-      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible text-ink ${variant === "contact" ? "facade-sketch--contact max-md:w-[270vw] md:max-xl:w-[150vw]" : "max-md:w-[158vw]"} ${className}`}
+      className={`facade-sketch pointer-events-none absolute right-0 top-0 h-auto w-full overflow-visible ${variant === "outline" ? "" : "text-ink"} ${variant === "contact" ? "facade-sketch--contact max-md:w-[270vw] md:max-xl:w-[150vw]" : "max-md:w-[158vw]"} ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1"
@@ -203,6 +275,19 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
         <mask id={id("mask")} maskUnits="userSpaceOnUse" x="-200" y="-400" width="2200" height={BOTTOM + 400}>
           <rect x="-200" y="-400" width="2200" height={BOTTOM + 400} fill={`url(#${id("mask-fill")})`} />
         </mask>
+        {variant === "outline" && (
+          <>
+            <linearGradient id={id("mask-x-fill")} gradientUnits="userSpaceOnUse" x1="380" y1="0" x2="1560" y2="0">
+              <stop offset="0" stopColor="#fff" stopOpacity="0" />
+              <stop offset="0.3" stopColor="#fff" />
+              <stop offset="0.62" stopColor="#fff" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            </linearGradient>
+            <mask id={id("mask-x")} maskUnits="userSpaceOnUse" x="-200" y="-400" width="2200" height={BOTTOM + 400}>
+              <rect x="-200" y="-400" width="2200" height={BOTTOM + 400} fill={`url(#${id("mask-x-fill")})`} />
+            </mask>
+          </>
+        )}
       </defs>
 
       {/* Gradient ids are prefixed per variant — the sketch appears in more than one section */}
@@ -237,6 +322,18 @@ export default function FacadeSketch({ variant, className = "" }: { variant: Var
             {/* Main tower — built floor by floor on scroll */}
             <BuildingTower tower={servicesTower} id={id} />
           </>
+        )}
+
+        {variant === "outline" && (
+          // Second mask: the drawing also fades out sideways, so no line ever stops at a hard edge
+          <g mask={`url(#${id("mask-x")})`}>
+            <g data-facade-part>
+              <OutlineBlock b={outlineWing} strong={0.16} soft={0.08} />
+            </g>
+            <g data-facade-part>
+              <OutlineBlock b={outlineTower} />
+            </g>
+          </g>
         )}
 
         {variant === "contact" && (

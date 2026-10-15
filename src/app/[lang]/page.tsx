@@ -7,7 +7,6 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Transformation from "@/components/Transformation";
 import Services from "@/components/Services";
-import Editorial from "@/components/Editorial";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Motion from "@/components/Motion";
@@ -110,10 +109,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-mist focus:px-4 focus:py-3 focus:text-ink"
-      >
+      <a href="#main" className="skip-link">
         {t.a11y.skipToContent}
       </a>
       <Header lang={lang} t={t} />
@@ -122,7 +118,6 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         <About t={t} />
         <Transformation t={t} />
         <Services t={t} />
-        <Editorial t={t} />
         <Contact lang={lang} t={t} />
       </main>
       <Footer lang={lang} t={t} />

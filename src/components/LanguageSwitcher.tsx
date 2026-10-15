@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import { Fragment, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { locales, localeMeta, type Locale } from "@/i18n/config";
 import { sectionIds } from "@/content/site";
@@ -53,22 +53,22 @@ export default function LanguageSwitcher({
   };
 
   return (
-    <nav aria-label={label} className={`flex items-center gap-5 ${className}`}>
-      {locales.map((locale) => (
-        <a
-          key={locale}
-          href={`/${locale}`}
-          hrefLang={localeMeta[locale].htmlLang}
-          lang={localeMeta[locale].htmlLang}
-          aria-current={locale === lang ? "true" : undefined}
-          onClick={(event) => handleClick(event, locale)}
-          className={`link-line py-2 text-[0.8125rem] font-semibold uppercase tracking-[0.08em] transition-opacity duration-300 ${
-            locale === lang ? "opacity-100" : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          {locale}
-          <span className="sr-only"> – {localeMeta[locale].label}</span>
-        </a>
+    <nav aria-label={label} className={`lang-switch flex items-center ${className}`}>
+      {locales.map((locale, index) => (
+        <Fragment key={locale}>
+          {index > 0 && <span aria-hidden="true" className="mx-3 h-4 w-px bg-current opacity-35" />}
+          <a
+            href={`/${locale}`}
+            hrefLang={localeMeta[locale].htmlLang}
+            lang={localeMeta[locale].htmlLang}
+            aria-current={locale === lang ? "true" : undefined}
+            onClick={(event) => handleClick(event, locale)}
+            className="lang-link inline-flex min-h-11 items-center justify-center text-[0.875rem] uppercase"
+          >
+            {locale}
+            <span className="sr-only"> – {localeMeta[locale].label}</span>
+          </a>
+        </Fragment>
       ))}
     </nav>
   );

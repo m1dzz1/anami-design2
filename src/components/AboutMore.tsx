@@ -26,7 +26,7 @@ export default function AboutMore({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="mt-5 space-y-5 border-l border-mint/40 pl-5">
+          <div className="mt-5 space-y-5 border-l border-teal-light/50 pl-5 text-[1.0313rem] leading-[1.65] text-white/88">
             {paragraphs.map((text) => (
               <p key={text}>{text}</p>
             ))}
@@ -38,15 +38,12 @@ export default function AboutMore({
         aria-expanded={expanded}
         aria-controls={regionId}
         onClick={() => setExpanded((value) => !value)}
-        className="btn btn-glass mt-9"
+        className="group mt-8 inline-flex min-h-11 items-center gap-5 text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-white"
       >
-        {expanded ? lessLabel : moreLabel}
-        <ArrowRight
-          aria-hidden="true"
-          size={18}
-          strokeWidth={1.5}
-          className={`btn-arrow ${expanded ? "-rotate-90" : ""}`}
-        />
+        <span className="link-line">{expanded ? lessLabel : moreLabel}</span>
+        <span aria-hidden="true" className="circle-arrow text-white/80 group-hover:bg-white group-hover:text-teal-surface">
+          <ArrowRight size={17} strokeWidth={1.5} className={`transition-transform duration-500 ${expanded ? "-rotate-90" : "rotate-90"}`} />
+        </span>
       </button>
     </>
   );

@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 import type { Dictionary } from "@/i18n/types";
 import { sectionIds, transformationFrames as frames } from "@/content/site";
 
 type FrameSet = "lg" | "sm";
 
-// The first frame of each stage — the bare shell holds for a while, then paint, flooring and furniture arrive
-const stageStarts = [0, 26, 44, 62];
-// Share of the scroll distance spent before the first and after the last frame, so both ends linger
-const leadIn = 0.04;
-const leadOut = 0.1;
+// First frame of each stage — the bare shell, then the fit-out (paint and flooring), then the furnished move-in
+const stageStarts = [0, 26, 62];
+// Share of the scroll distance before the first and after the last frame, so both ends rest for a moment
+const leadIn = 0.05;
+const leadOut = 0.12;
+// Concurrent frame requests
+const MAX_IN_FLIGHT = 6;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -32,9 +34,9 @@ function loadOrder(count: number, minStride: number) {
 }
 
 /**
- * "Od ideje do useljenja" — a pinned, scroll-scrubbed image sequence: the office floor builds itself
- * from a bare concrete shell into a finished workspace while the four stages of the process play alongside.
- * Frames are drawn to a canvas and cross-faded, so the 81 source frames read as continuous motion.
+ * "Od ideje do useljenja" — a pinned, scroll-scrubbed frame sequence: the office floor builds itself from a
+ * bare concrete shell into a finished workspace. One scroll progress value drives the canvas, the active stage
+ * and both progress indicators (via the --p custom property). React state changes only when the stage changes.
  */
 export default function Transformation({ t }: { t: Dictionary }) {
   const tr = t.transformation;
@@ -50,8 +52,9 @@ export default function Transformation({ t }: { t: Dictionary }) {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d", { alpha: false });
     if (!section || !box || !canvas || !ctx) return;
+    // Reduced motion gets the static layout from CSS — no frames are downloaded at all
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
     const lightweight = Boolean(connection?.saveData || /2g|3g/.test(connection?.effectiveType ?? ""));
 
@@ -60,9 +63,8 @@ export default function Transformation({ t }: { t: Dictionary }) {
     let generation = 0;
     let current = 0;
     let target = 0;
-    let lastDrawn = -1;
+    let lastDrawn = "";
     let raf = 0;
-    let visible = false;
     let started = false;
     let currentStage = 0;
 
@@ -72,11 +74,12 @@ export default function Transformation({ t }: { t: Dictionary }) {
       set = frameSet;
       const gen = ++generation;
       images.fill(null);
-      lastDrawn = -1;
-      const queue = loadOrder(frames.count, lightweight ? 2 : 1);
+      lastDrawn = "";
+      // Phones and data-saver connections take every second frame; the cross-fade covers the gaps
+      const queue = loadOrder(frames.count, lightweight || frameSet === "sm" ? 2 : 1);
       let active = 0;
       const next = () => {
-        while (active < 6 && queue.length) {
+        while (active < MAX_IN_FLIGHT && queue.length) {
           const index = queue.shift()!;
           const img = new Image();
           img.decoding = "async";
@@ -88,8 +91,8 @@ export default function Transformation({ t }: { t: Dictionary }) {
               if (gen !== generation) return;
               images[index] = img;
               if (index === 0) setReady(true);
-              lastDrawn = -1;
-              requestDraw();
+              lastDrawn = "";
+              requestTick();
             })
             .catch(() => {})
             .finally(() => {
@@ -101,16 +104,68 @@ export default function Transformation({ t }: { t: Dictionary }) {
       next();
     };
 
-    /** Nearest decoded frame to `index`, searching outwards. */
-    const nearest = (index: number) => {
-      for (let d = 0; d < frames.count; d++) {
-        const before = images[index - d];
-        if (before) return before;
-        const after = images[index + d];
-        if (after) return after;
-      }
-      return null;
+    /** Closest decoded frames at or below / above `position`. */
+    const neighbours = (position: number) => {
+      let below = -1;
+      let above = -1;
+      for (let i = Math.floor(position); i >= 0; i--) if (images[i]) { below = i; break; }
+      for (let i = Math.ceil(position); i < frames.count; i++) if (images[i]) { above = i; break; }
+      return { below, above };
     };
+
+    const cover = (img: HTMLImageElement) => {
+      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+      const w = img.naturalWidth * scale;
+      const h = img.naturalHeight * scale;
+      // Landscape frames keep the timber column and the green wall in view on narrower screens
+      const focusX = set === "lg" ? 0.58 : 0.5;
+      ctx.drawImage(img, (canvas.width - w) * focusX, (canvas.height - h) / 2, w, h);
+    };
+
+    const draw = () => {
+      let { below, above } = neighbours(current);
+      if (below < 0) below = above;
+      if (above < 0) above = below;
+      if (below < 0) return;
+      const mix = above === below ? 0 : (current - below) / (above - below);
+      const key = `${below}:${above}:${mix.toFixed(2)}:${canvas.width}`;
+      if (key === lastDrawn) return;
+      lastDrawn = key;
+      ctx.imageSmoothingQuality = "high";
+      ctx.globalAlpha = 1;
+      cover(images[below]!);
+      if (mix > 0.01) {
+        ctx.globalAlpha = mix;
+        cover(images[above]!);
+        ctx.globalAlpha = 1;
+      }
+    };
+
+    const measure = () => {
+      const rect = section.getBoundingClientRect();
+      const progress = clamp01(-rect.top / Math.max(1, rect.height - window.innerHeight));
+      section.style.setProperty("--p", progress.toFixed(4));
+      target = clamp01((progress - leadIn) / (1 - leadIn - leadOut)) * (frames.count - 1);
+      const nextStage = stageStarts.reduce((acc, start, i) => (target >= start - 0.5 ? i : acc), 0);
+      if (nextStage !== currentStage) {
+        currentStage = nextStage;
+        setStage(nextStage);
+      }
+    };
+
+    // Runs only while something changes: a scroll, a resize, a freshly decoded frame, or the ease settling
+    const tick = () => {
+      raf = 0;
+      measure();
+      const delta = target - current;
+      current = Math.abs(delta) < 0.02 ? target : current + delta * 0.2;
+      draw();
+      if (current !== target) requestTick();
+    };
+
+    function requestTick() {
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -119,75 +174,17 @@ export default function Transformation({ t }: { t: Dictionary }) {
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
-        lastDrawn = -1;
+        lastDrawn = "";
       }
       const wanted = pickSet();
       if (started && wanted !== set) load(wanted);
-      requestDraw();
+      requestTick();
     };
 
-    const cover = (img: HTMLImageElement) => {
-      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      const w = img.naturalWidth * scale;
-      const h = img.naturalHeight * scale;
-      // Landscape frames keep the timber column and the green wall in view on narrower screens
-      const focusX = set === "lg" ? 0.56 : 0.5;
-      ctx.drawImage(img, (canvas.width - w) * focusX, (canvas.height - h) / 2, w, h);
-    };
+    let visible = false;
+    const onScroll = () => visible && requestTick();
 
-    const draw = () => {
-      const base = Math.floor(current);
-      const mix = current - base;
-      const key = Math.round(current * 100);
-      if (key === lastDrawn) return;
-      const a = nearest(base);
-      if (!a) return;
-      lastDrawn = key;
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.globalAlpha = 1;
-      cover(a);
-      const b = mix > 0.01 && base + 1 < frames.count ? images[base + 1] : null;
-      if (b) {
-        ctx.globalAlpha = mix;
-        cover(b);
-        ctx.globalAlpha = 1;
-      }
-    };
-
-    const measure = () => {
-      const rect = section.getBoundingClientRect();
-      const distance = rect.height - window.innerHeight;
-      const progress = clamp01(-rect.top / Math.max(1, distance));
-      section.style.setProperty("--p", progress.toFixed(4));
-      const sequence = clamp01((progress - leadIn) / (1 - leadIn - leadOut));
-      target = sequence * (frames.count - 1);
-      section.style.setProperty("--intro", clamp01(progress / 0.06).toFixed(3));
-      const nextStage = stageStarts.reduce((acc, start, i) => (target >= start - 0.5 ? i : acc), 0);
-      if (nextStage !== currentStage) {
-        currentStage = nextStage;
-        setStage(nextStage);
-      }
-    };
-
-    const tick = () => {
-      raf = 0;
-      measure();
-      // While scrolling, follow the target and cross-fade neighbouring frames for smooth motion; once the scroll
-      // rests, settle on the nearest whole frame so a still image is never two frames blended into each other
-      const moving = Math.abs(target - current) > 0.35;
-      const goal = moving ? target : Math.round(target);
-      const delta = goal - current;
-      current = reduceMotion || Math.abs(delta) < 0.01 ? goal : current + delta * (moving ? 0.16 : 0.22);
-      draw();
-      if (visible || Math.abs(goal - current) > 0.01) raf = requestAnimationFrame(tick);
-    };
-
-    function requestDraw() {
-      if (!raf) raf = requestAnimationFrame(tick);
-    }
-
-    // Start fetching frames well before the section scrolls into view
+    // Start fetching frames one screen before the section arrives (not on first paint)
     const preload = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting || started) return;
@@ -195,18 +192,18 @@ export default function Transformation({ t }: { t: Dictionary }) {
         load(pickSet());
         preload.disconnect();
       },
-      { rootMargin: "150% 0px" },
+      { rootMargin: "60% 0px" },
     );
-    // Only animate while the section is on screen
     const onScreen = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible) requestDraw();
+      requestTick();
     });
     const resizeObserver = new ResizeObserver(resize);
 
     preload.observe(section);
     onScreen.observe(section);
     resizeObserver.observe(box);
+    window.addEventListener("scroll", onScroll, { passive: true });
     measure();
     current = target;
 
@@ -215,138 +212,125 @@ export default function Transformation({ t }: { t: Dictionary }) {
       preload.disconnect();
       onScreen.disconnect();
       resizeObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
-  const total = String(tr.steps.length).padStart(2, "0");
+  const steps = tr.steps;
 
   return (
     <section
       ref={sectionRef}
       id={sectionIds.transformation}
       aria-labelledby="transformation-title"
-      className="transformation relative bg-ink"
+      className="transformation relative z-[var(--z-raise)] bg-petrol-deep"
       data-stage={stage}
     >
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {/* Image stage — full-bleed from tablets up, the upper part of the screen on phones */}
-        <div ref={stageRef} className="tr-stage absolute inset-x-0 top-0">
-          <picture>
-            <source media="(max-aspect-ratio: 1/1)" srcSet={frames.path("sm", 0)} />
+      <div className="tr-pin">
+        {/* Frame stage — full-bleed from tablets up, the upper part of the screen on phones */}
+        <div ref={stageRef} className="tr-stage absolute inset-x-0 top-0 bg-petrol-deep">
+          <div className="tr-live absolute inset-0">
+            {/* Poster: the first frame, shown until the canvas has its first decoded frame */}
+            <picture>
+              <source media="(max-aspect-ratio: 1/1)" srcSet={frames.path("sm", 0)} />
+              <img
+                src={frames.path("lg", 0)}
+                alt=""
+                width={frames.lg.width}
+                height={frames.lg.height}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 size-full object-cover object-[58%_50%]"
+              />
+            </picture>
+            <canvas
+              ref={canvasRef}
+              role="img"
+              aria-label={tr.imageAlt}
+              className={`absolute inset-0 size-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}
+            />
+          </div>
+          {/* Reduced motion: the finished space as a still photograph */}
+          <picture className="tr-static">
+            <source media="(max-aspect-ratio: 1/1)" srcSet={frames.path("sm", frames.count - 1)} />
             <img
-              src={frames.path("lg", 0)}
-              alt=""
+              src={frames.path("lg", frames.count - 1)}
+              alt={tr.imageAlt}
               width={frames.lg.width}
               height={frames.lg.height}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 size-full object-cover object-[56%_50%]"
+              className="absolute inset-0 size-full object-cover object-[58%_50%]"
             />
           </picture>
-          <canvas
-            ref={canvasRef}
-            role="img"
-            aria-label={tr.imageAlt}
-            className={`absolute inset-0 size-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}
-          />
-          {/* Grades: deep on the text side, soft at the top for the navigation, fading into the ink below */}
           <div aria-hidden="true" className="tr-grade absolute inset-0" />
         </div>
 
-        <div className="container-x relative flex h-full flex-col justify-end pb-8 sm:pb-10 md:justify-center md:pb-0 md:pt-[var(--nav-h)]">
-          <div className="max-w-[36rem]">
-            <p data-reveal-text className="kicker text-mint">
-              {tr.kicker}
+        <div className="tr-content container-x relative flex h-full flex-col justify-end pb-[max(1.5rem,4svh)] md:justify-center md:pb-0 md:pt-[var(--nav-h)]">
+          <div className="max-w-[min(38rem,48vw)] max-md:max-w-[31rem]">
+            <p aria-hidden="true" className="tr-motion-only text-[0.75rem] font-bold uppercase tracking-[0.18em] text-teal-light">
+              0{stage + 1} <span className="text-white/50">/</span> {steps[stage].title}
             </p>
-            <h2 id="transformation-title" className="display mt-5 text-[clamp(2.6rem,12vw,4.2rem)] text-white md:text-[clamp(3.6rem,6.2vw,6.6rem)]">
-              <span className="block overflow-hidden pb-[0.04em]">
-                <span data-line className="block">{tr.titleLine1}</span>
-              </span>
-              <span className="block overflow-hidden pb-[0.04em]">
-                <span data-line className="block text-mint">{tr.titleLine2}</span>
-              </span>
+            <h2 id="transformation-title" className="display mt-4 text-[clamp(2.5rem,11vw,3.6rem)] text-white md:text-[clamp(3.6rem,5.6vw,5.8rem)]">
+              <span className="block">{tr.titleLine1}</span>
+              <span className="block text-teal-light">{tr.titleLine2}</span>
             </h2>
-            <p className="tr-lead mt-5 max-w-[30rem] text-[1.0625rem] leading-[1.55] text-white/88 max-md:sr-only">{tr.lead}</p>
+            <p className="tr-static mt-5 text-[1.0625rem] leading-[1.6] text-white/88">{tr.lead}</p>
 
-            {/* Mobile progress — four segments, the active one fills with the scroll */}
-            <div aria-hidden="true" className="mt-6 grid grid-cols-4 gap-1.5 md:hidden">
-              {tr.steps.map((step, index) => (
-                <span key={step.title} className="relative h-[2px] overflow-hidden bg-white/20">
-                  <span className="tr-seg absolute inset-0 origin-left bg-mint" style={{ "--i": index } as React.CSSProperties} />
-                </span>
-              ))}
-            </div>
-
-            {/* Stages — stacked in one cell and cross-faded; all stay in the accessibility tree */}
-            <ol className="mt-5 grid md:mt-10">
-              {tr.steps.map((step, index) => (
+            {/* Stages — stacked in one cell and cross-faded; all three stay in the accessibility tree */}
+            <ol className="tr-steps mt-4 grid md:mt-6">
+              {steps.map((step, index) => (
                 <li
                   key={step.title}
                   data-active={index === stage}
-                  className="tr-step col-start-1 row-start-1 flex items-start gap-5 md:gap-7"
+                  aria-current={index === stage ? "step" : undefined}
+                  className="tr-step col-start-1 row-start-1"
                 >
-                  <span aria-hidden="true" className="display text-[2.6rem] font-medium leading-[0.85] text-mint md:text-[3.6rem]">
-                    0{index + 1}
+                  <span className="sr-only">
+                    {tr.stepLabel} {index + 1}: {step.title}.{" "}
                   </span>
-                  <span className="border-l border-white/30 pl-5 md:pl-7">
-                    <span className="sr-only">
-                      {tr.stepLabel} {index + 1}:{" "}
-                    </span>
-                    <span className="block font-display text-[1.5rem] font-semibold uppercase leading-none tracking-[0.02em] text-white md:text-[1.9rem]">
-                      {step.title}
-                    </span>
-                    <span className="mt-2 block max-w-[24rem] text-[0.9375rem] leading-[1.55] text-white/80 md:mt-3 md:text-[1rem]">
-                      {step.text}
-                    </span>
+                  <span aria-hidden="true" className="tr-static mb-1 font-display text-[1.4rem] font-semibold uppercase text-teal-light">
+                    0{index + 1} {step.title}
+                  </span>
+                  <span className="block max-w-[26rem] text-[0.9844rem] leading-[1.6] text-white/88 md:text-[1.0625rem]">
+                    {step.text}
                   </span>
                 </li>
               ))}
             </ol>
 
-            <a href={`#${sectionIds.contact}`} className="tr-cta btn btn-glass mt-8">
-              {tr.cta}
-              <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
-            </a>
+            <span aria-hidden="true" className="rule mt-6 hidden text-white/60 md:block" />
+
+            {/* Mobile progress — three segments filling with the scroll */}
+            <div aria-hidden="true" className="tr-motion-only mt-5 grid grid-cols-3 gap-1.5 md:hidden">
+              {steps.map((step, index) => (
+                <span key={step.title} className="relative h-[3px] overflow-hidden bg-white/20">
+                  <span className="tr-seg absolute inset-0 origin-left bg-teal-light" style={{ "--i": index } as CSSProperties} />
+                </span>
+              ))}
+            </div>
+
+            <div className="relative mt-6 min-h-[3.25rem] md:mt-8">
+              <a href={`#${sectionIds.contact}`} className="tr-cta btn btn-primary relative">
+                {tr.cta}
+                <ArrowRight aria-hidden="true" size={18} strokeWidth={1.5} className="btn-arrow" />
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Desktop progress rail — right edge */}
-        <div aria-hidden="true" className="absolute right-[var(--gutter)] top-1/2 hidden -translate-y-1/2 md:block">
-          <div className="relative flex flex-col gap-10 pr-6 lg:gap-12">
-            <span className="absolute right-0 top-1 bottom-1 w-px bg-white/20" />
-            <span className="tr-rail absolute right-0 top-1 bottom-1 w-px origin-top bg-mint" />
-            {tr.steps.map((step, index) => (
-              <span
-                key={step.title}
-                data-active={index === stage}
-                data-done={index < stage}
-                className="tr-tick relative flex items-center justify-end gap-4 text-right text-[0.6875rem] font-bold uppercase tracking-[0.2em]"
-              >
-                <span className="tr-tick-label">{step.title}</span>
-                <span className="tr-tick-num display text-[1.1rem] font-medium tracking-normal">0{index + 1}</span>
-                <span className="tr-tick-dot absolute -right-6 size-[7px] translate-x-1/2 rounded-full" />
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Stage counter + scroll hint — bottom edge, desktop */}
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 hidden md:block">
-          <div className="container-x flex items-end justify-between pb-8">
-            <p className="flex items-baseline gap-3 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-white/70">
-              {tr.stepLabel}
-              <span className="display text-[1.6rem] font-medium tracking-normal text-white">0{stage + 1}</span>
-              <span className="text-white/50">/ {total}</span>
-            </p>
-            <p className="tr-hint flex items-center gap-3 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-white/75">
-              {tr.scrollHint}
-              <span className="relative block h-10 w-px overflow-hidden bg-white/25">
-                <span className="tr-hint-line absolute inset-x-0 top-0 h-1/2 bg-mint" />
-              </span>
-            </p>
-          </div>
-        </div>
+        {/* Desktop progress rail — right edge: a hairline track that fills with the scroll, one row per stage */}
+        <ol aria-hidden="true" className="tr-motion-only tr-rail absolute right-[var(--gutter)] top-1/2 hidden -translate-y-1/2 md:flex">
+          <span className="tr-rail-track" />
+          <span className="tr-rail-fill" />
+          {steps.map((step, index) => (
+            <li key={step.title} data-active={index === stage} data-done={index < stage} className="tr-rail-item">
+              <span className="display text-[1.5rem] font-medium leading-none">0{index + 1}</span>
+              <span className="mt-1.5 block text-[0.6875rem] font-bold uppercase tracking-[0.16em]">{step.title}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

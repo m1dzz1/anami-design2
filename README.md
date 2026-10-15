@@ -19,7 +19,8 @@ src/app/[lang]/                               localized root layout + page (/sr,
 src/app/api/contact/route.ts                  contact form endpoint (validation, spam protection, email)
 src/app/sitemap.ts, robots.ts, manifest.ts, icon.svg, apple-icon.png
 src/app/llms.txt/route.ts                     plain-language company summary for AI assistants (AEO)
-src/components/                               one component per section (Header, Hero, About, Services, Editorial, Contact, Footer)
+src/components/                               one component per section (Header, Hero, About, Transformation, Services, Contact, Footer);
+                                              Editorial.tsx and the contact office sketch are kept but not rendered
 src/content/site.ts                           company data, image paths, section anchors — language independent
 src/i18n/dictionaries/{sr,en}.ts              all visible copy, manually translated (sr.ts defines the shape)
 src/lib/contact-validation.ts                 validation shared by client and server
@@ -28,9 +29,11 @@ src/app/globals.css                           design tokens (colors, fonts, spac
 
 ## Brand tokens
 
-The colors are provisional. They are defined once in `src/app/globals.css` (`--anami-ink`, `--anami-forest`,
-`--anami-green`, `--anami-mint`, `--anami-mist`). Change them there when the official guidelines arrive.
-The temporary wordmark lives in `src/components/Logo.tsx`. Replace its contents with the official SVG logo.
+Colors come from the official logo standard: teal `#13747E` (Pantone 7474 C) and grey `#717270` (Pantone 424 C).
+All derived tones (petrol surfaces, light teal accent, cool greys), spacing, container widths, z-index layers and
+motion timings are tokens at the top of `src/app/globals.css`. Component classes live in `@layer components`
+so Tailwind utilities can still override them. The official logo is `src/components/Logo.tsx`
+(`color` on light surfaces, `mono` = white on dark, per the standard).
 
 ## Images
 

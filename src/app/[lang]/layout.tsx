@@ -8,7 +8,7 @@ import "../globals.css";
 
 const display = Barlow_Condensed({
   subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-barlow-condensed",
   display: "swap",
 });
@@ -27,7 +27,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: "#0E2A2E",
+  themeColor: "#183A40",
   colorScheme: "dark light",
 };
 
