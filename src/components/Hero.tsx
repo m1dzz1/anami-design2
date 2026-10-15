@@ -33,10 +33,16 @@ export default function Hero({ t }: { t: Dictionary }) {
             <p className="enter kicker text-teal-light" style={{ animationDelay: "80ms" }}>
               {h.kicker}
             </p>
-            <h1 id="hero-title" className="enter display display-xl mt-6 text-white" style={{ animationDelay: "140ms" }}>
-              <span className="block">{h.titleBrand}</span>
-              <span className="block">{h.titleLine1}</span>
-              <span className="block text-teal-light">{h.titleLine2}</span>
+            <h1 id="hero-title" className="display display-xl mt-6 text-white">
+              <span className="enter-line block" style={{ animationDelay: "140ms" }}>
+                {h.titleBrand}
+              </span>
+              <span className="enter-line block" style={{ animationDelay: "230ms" }}>
+                {h.titleLine1}
+              </span>
+              <span className="enter-line block text-teal-light" style={{ animationDelay: "320ms" }}>
+                {h.titleLine2}
+              </span>
             </h1>
             <p className="enter mt-6 max-w-[29rem] text-[1.0625rem] leading-[1.6] text-white/90 sm:text-[1.125rem]" style={{ animationDelay: "320ms" }}>
               {h.lead}

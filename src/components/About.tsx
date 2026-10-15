@@ -14,7 +14,7 @@ export default function About({ t }: { t: Dictionary }) {
     >
       {/* Decorative layer: outline word and hairlines (clipped here so the photographs above it may overhang) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span className="outline-word absolute -right-[0.04em] top-[clamp(1.5rem,4vw,3.5rem)] text-[clamp(6rem,19vw,17rem)]">
+        <span data-drift className="outline-word absolute -right-[0.04em] top-[clamp(1.5rem,4vw,3.5rem)] text-[clamp(6rem,19vw,17rem)]">
           {a.outlineWord}
         </span>
         <span className="absolute inset-x-0 top-0 h-px bg-white/10" />
@@ -69,7 +69,7 @@ export default function About({ t }: { t: Dictionary }) {
             ))}
           </div>
           <AboutMore paragraphs={a.secondary} moreLabel={a.more} lessLabel={a.less} />
-          <p className="mt-10 flex flex-wrap gap-x-5 gap-y-1 border-t border-white/15 pt-5 text-[0.875rem] text-white/75">
+          <p data-stagger className="mt-10 flex flex-wrap gap-x-5 gap-y-1 border-t border-white/15 pt-5 text-[0.875rem] text-white/75">
             {a.statement.map((line) => (
               <span key={line}>{line}</span>
             ))}

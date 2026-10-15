@@ -87,7 +87,7 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
             <div data-reveal-text className="mt-12">
               <h3 className="sr-only">{c.info.title}</h3>
               <address className="not-italic">
-                <dl className="grid gap-x-10 gap-y-6 text-[0.9375rem] leading-[1.55] text-white/80 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <dl data-stagger className="grid gap-x-10 gap-y-6 text-[0.9375rem] leading-[1.55] text-white/80 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                   {info.map(({ icon: Icon, label, body }) => (
                     <div key={label} className="flex gap-4">
                       <dt className="shrink-0 pt-0.5">

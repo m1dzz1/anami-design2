@@ -28,7 +28,7 @@ export default function Services({ t }: { t: Dictionary }) {
               {s.titleLine1} <span className="text-teal-deep">{s.titleLine2}</span>
             </h2>
           </div>
-          <span aria-hidden="true" className="hidden h-[2px] bg-teal lg:mt-10 lg:block" />
+          <span aria-hidden="true" data-draw className="hidden h-[2px] bg-teal lg:mt-10 lg:block" />
           <p data-reveal-text className="max-w-[var(--measure)] text-[1.0313rem] leading-[1.65] text-muted lg:mt-10">
             {s.intro}
           </p>

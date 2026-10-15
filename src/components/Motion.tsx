@@ -34,26 +34,68 @@ export default function Motion({ lang }: { lang: string }) {
           const once = (trigger: Element, start = "top 86%") => ({ trigger, start, once: true });
           // Elements already on screen at load are never hidden (no flash, no layout shift)
 
-          // 1. Copy blocks (kicker + heading + text) rise in as one block
+          // Masked line reveal: the clip box travels with the text, so each line appears to rise out of a slot.
+          // Negative insets at the end leave room for descenders; clearProps drops the clip once it's done.
+          const lineFrom = { yPercent: 70, clipPath: "inset(0% -5% 100% -5%)" };
+          const lineTo = { yPercent: 0, clipPath: "inset(-20% -5% -20% -5%)", duration: 1.1, ease: "expo.out", stagger: 0.12, clearProps: "clipPath,transform" };
+
+          // 1. Copy blocks rise in as one block; inside it the heading lines, accent rule and listed items follow
           gsap.utils
             .toArray<HTMLElement>("[data-reveal-text]")
             .filter(below)
             .forEach((el) => {
-              gsap.from(el, { y: rise, autoAlpha: 0, duration: 1, ease: "expo.out", scrollTrigger: once(el) });
+              const tl = gsap.timeline({ scrollTrigger: once(el) });
+              tl.from(el, { y: rise, autoAlpha: 0, duration: 1, ease: "expo.out" });
+              const heading = el.querySelector<HTMLElement>("h2.display");
+              if (heading) {
+                const lines = heading.querySelectorAll(":scope > .block");
+                tl.fromTo(lines.length ? lines : heading, lineFrom, lineTo, 0.05);
+              }
+              const rules = el.querySelectorAll(".rule");
+              if (rules.length) tl.from(rules, { scaleX: 0, transformOrigin: "0% 50%", duration: 0.9, ease: "expo.out" }, 0.35);
+              const items = el.querySelectorAll("[data-stagger] > *");
+              if (items.length) tl.from(items, { y: 14, autoAlpha: 0, duration: 0.8, ease: "expo.out", stagger: 0.08 }, 0.4);
             });
 
-          // 2. Groups (service cards) — short stagger
+          // Standalone accent lines draw in from the left
+          gsap.utils.toArray<HTMLElement>("[data-draw]").filter(below).forEach((line) => {
+            gsap.from(line, { scaleX: 0, transformOrigin: "0% 50%", duration: 1.2, ease: "expo.out", scrollTrigger: once(line) });
+          });
+
+          // 2. Groups (service cards) — short stagger; each photo settles from a slight zoom as its card lands
           gsap.utils.toArray<HTMLElement>("[data-reveal-group]").filter(below).forEach((group) => {
             const items = group.querySelectorAll("[data-reveal-item]");
             if (!items.length) return;
-            gsap.from(items, { y: rise * 1.25, autoAlpha: 0, duration: 1.1, ease: "expo.out", stagger: 0.12, scrollTrigger: once(group, "top 84%") });
+            const tl = gsap.timeline({ scrollTrigger: once(group, "top 84%") });
+            tl.from(items, { y: rise * 1.25, autoAlpha: 0, duration: 1.1, ease: "expo.out", stagger: 0.12 });
+            const media = group.querySelectorAll("[data-card-media] img");
+            // The hover zoom is a CSS transition on the same transform, so it's paused until the entrance ends
+            if (media.length) {
+              tl.fromTo(
+                media,
+                { scale: 1.18, transition: "none" },
+                { scale: 1, duration: 1.6, ease: "expo.out", stagger: 0.12, clearProps: "transform,transition" },
+                0,
+              );
+            }
           });
 
-          // 3. "O nama" collage — the two photographs arrive one after the other; the small one drifts on desktop
+          // 3. "O nama" collage — the two photographs are unmasked bottom-up one after the other, settling from a
+          // slight zoom; the small one drifts on desktop
           gsap.utils.toArray<HTMLElement>('[data-reveal="composition"]').forEach((composition) => {
             const photos = gsap.utils.toArray<HTMLElement>("[data-reveal-img]", composition);
             if (below(composition)) {
-              gsap.from(photos, { y: rise * 1.5, autoAlpha: 0, duration: 1.2, ease: "expo.out", stagger: 0.18, scrollTrigger: once(composition, "top 80%") });
+              const tl = gsap.timeline({ scrollTrigger: once(composition, "top 80%") });
+              tl.fromTo(
+                photos,
+                { clipPath: "inset(100% 0% 0% 0%)" },
+                { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut", stagger: 0.22, clearProps: "clipPath" },
+              );
+              tl.from(
+                photos.map((photo) => photo.querySelector("img")).filter(Boolean),
+                { scale: 1.25, duration: 1.8, ease: "expo.out", stagger: 0.22, clearProps: "transform" },
+                0.15,
+              );
             }
             if (isDesktop) {
               gsap.utils.toArray<HTMLElement>("[data-depth]", composition).forEach((layer) => {
@@ -117,6 +159,15 @@ export default function Motion({ lang }: { lang: string }) {
             if (hero && heroBg) {
               gsap.to(heroBg, { yPercent: 8, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.4 } });
             }
+
+            // 7. Large outline words slide sideways while their section passes through the viewport
+            gsap.utils.toArray<HTMLElement>("[data-drift]").forEach((word) => {
+              gsap.fromTo(
+                word,
+                { xPercent: 6 },
+                { xPercent: -6, ease: "none", scrollTrigger: { trigger: word.closest("section"), start: "top bottom", end: "bottom top", scrub: 0.8 } },
+              );
+            });
           }
         },
       );
