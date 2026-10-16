@@ -44,7 +44,7 @@ export default function Hero({ t }: { t: Dictionary }) {
                 {h.titleLine2}
               </span>
             </h1>
-            <p className="enter mt-6 max-w-[29rem] text-[1.0625rem] leading-[1.6] text-white/90 sm:text-[1.125rem]" style={{ animationDelay: "320ms" }}>
+            <p className="enter mt-6 max-w-[29rem] hero-lead text-[1.0625rem] font-medium leading-[1.6] text-white sm:text-[1.125rem]" style={{ animationDelay: "320ms" }}>
               {h.lead}
             </p>
             <a href={`#${sectionIds.about}`} className="enter btn btn-primary mt-8" style={{ animationDelay: "440ms" }}>

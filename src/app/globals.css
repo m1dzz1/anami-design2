@@ -364,7 +364,7 @@ body {
 /*
   Reference: at the top the bar opens between the logo and the links.
   Edge 1 is a hard cut along the ceiling beam's outline (--clip-open is traced by Header from the photograph),
-  edge 2 fades the links panel in from transparent.
+  edge 2 is a hard cut along the round arch's outer edge (--clip-links).
 */
 .site-header[data-split="true"]::before {
   clip-path: var(--clip-open);
@@ -372,8 +372,30 @@ body {
 
 .site-header[data-split="true"]::after {
   opacity: 1;
-  -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--fade-end) - 7rem), #000 var(--fade-end));
-  mask-image: linear-gradient(90deg, transparent calc(var(--fade-end) - 7rem), #000 var(--fade-end));
+  clip-path: var(--clip-links);
+}
+
+/* While open the clip follows the photograph every frame, so it only eases on the way in */
+.site-header[data-split="true"]:not([data-split-animating])::before {
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+/* The links slide right onto the links panel, clear of the arch (--links-shift is measured by Header) */
+.nav-links {
+  transition: transform 0.7s var(--ease-out);
+}
+
+.site-header[data-split="true"] .nav-links {
+  transform: translateX(var(--links-shift, 0px));
+}
+
+/* On laptop widths the gaps between the links tighten a little to fit beside the arch (--links-squeeze) */
+.site-header[data-split="true"] .nav-links li + li {
+  margin-left: calc(-1 * var(--links-squeeze, 0px));
+}
+
+.site-header[data-split="true"] .nav-links nav {
+  margin-right: calc(-1 * var(--links-squeeze, 0px));
 }
 
 .nav-row {
@@ -489,16 +511,14 @@ body {
   }
 }
 
+/* The lead sits partly over the bright reception; a soft dark halo keeps it solid there */
+.hero-lead {
+  text-shadow: 0 1px 14px rgb(17 41 46 / 0.55), 0 1px 2px rgb(17 41 46 / 0.4);
+}
+
 .hero-strip {
   background: linear-gradient(180deg, rgb(24 58 64 / 0.72), rgb(17 41 46 / 0.9));
   border-top: 1px solid var(--line-dark);
-}
-
-@media (min-width: 1024px) {
-  .hero-strip {
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-  }
 }
 
 /* ==========================================================================
@@ -756,9 +776,11 @@ body {
 @media (min-width: 768px) {
   .tr-grade {
     background:
-      linear-gradient(180deg, rgb(17 41 46 / 0.45) 0%, rgb(17 41 46 / 0) 18%),
-      linear-gradient(90deg, rgb(17 41 46 / 0.82) 0%, rgb(17 41 46 / 0.55) 26%, rgb(17 41 46 / 0) 50%),
-      linear-gradient(0deg, rgb(17 41 46 / 0.5) 0%, rgb(17 41 46 / 0) 22%);
+      linear-gradient(180deg, rgb(17 41 46 / 0.3) 0%, rgb(17 41 46 / 0) 16%),
+      linear-gradient(90deg, rgb(17 41 46 / 0.62) 0%, rgb(17 41 46 / 0.36) 28%, rgb(17 41 46 / 0) 50%),
+      /* Matching shade on the right edge, behind the progress rail */
+      linear-gradient(270deg, rgb(17 41 46 / 0.72) 0%, rgb(17 41 46 / 0.55) 14%, rgb(17 41 46 / 0.22) 26%, rgb(17 41 46 / 0) 36%),
+      linear-gradient(0deg, rgb(17 41 46 / 0.35) 0%, rgb(17 41 46 / 0) 20%);
   }
 }
 
@@ -799,11 +821,14 @@ body {
 }
 
 /* Desktop rail */
+/* The frames behind the rail go from white walls to red art to the green wall: the grade shades the right edge
+   and the labels carry a soft shadow, so they read on all of them */
 .tr-rail {
   position: absolute;
   flex-direction: column;
   gap: clamp(1.75rem, 6vh, 3.5rem);
   padding-left: 1.5rem;
+  text-shadow: 0 0 18px rgb(17 41 46 / 0.75), 0 1px 3px rgb(17 41 46 / 0.7);
 }
 
 .tr-rail-track,
@@ -816,7 +841,7 @@ body {
 }
 
 .tr-rail-track {
-  background: rgb(255 255 255 / 0.22);
+  background: rgb(255 255 255 / 0.3);
 }
 
 .tr-rail-fill {
@@ -827,7 +852,7 @@ body {
 
 .tr-rail-item {
   position: relative;
-  color: rgb(255 255 255 / 0.4);
+  color: rgb(255 255 255 / 0.62);
   transition: color 0.5s var(--ease-out);
 }
 
@@ -844,7 +869,7 @@ body {
 }
 
 .tr-rail-item[data-done="true"] {
-  color: rgb(255 255 255 / 0.65);
+  color: rgb(255 255 255 / 0.8);
 }
 
 .tr-rail-item[data-active="true"] {
@@ -858,6 +883,15 @@ body {
 .tr-rail-item[data-active="true"]::before {
   width: 1rem;
   background: var(--teal-light);
+}
+
+/* With a lighter grade the copy on the left gets a soft shadow of its own to stay crisp over the concrete */
+.tr-content {
+  text-shadow: 0 1px 16px rgb(17 41 46 / 0.5), 0 1px 2px rgb(17 41 46 / 0.35);
+}
+
+.tr-content .btn {
+  text-shadow: none;
 }
 
 /* Reduced motion: no pinning, no scrubbing — the finished space and all three stages, laid out statically */

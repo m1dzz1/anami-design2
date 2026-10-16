@@ -50,7 +50,7 @@ export const images = {
   aboutInterior: { src: "/images/anami-office-open.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAQCdASoMAAkAA4BaJZQAAmaq0oAA+FGFEF0xqg3EwufdH5Ec9ji0kwyc191XlaatZ3Dldx1JY/iXTmG/dCnNZl+gQAAA" },
   serviceDevelopment: { src: "/images/anami-building-facade.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoMAAkAA4BaJYgCdADbARHgAP4moINxYiAdeQiaYaof14df+FSHg09aOkfBn9oKMAQ9XzjISot3coAA" },
   serviceLeasing: { src: "/images/anami-office-terrace.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoMAAkAA4BaJZQAAxPwpDfmjTAA/fBfGPwloxoGqW4Bp8DQWdOeIpR0KmkQIQkiyYnW2xziefwueKDiRN8P4gAA" },
-  serviceManagement: { src: "/images/anami-office-corridor.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoMAAkAA4BaJQBdgCHhPEDPQ9gA/PYDpIQDx4E5GgLtTuStMXOyTrlYi3F70gd6kPb3PnHKVj6Ww+AA" },
+  serviceManagement: { src: "/images/anami-corridor.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoMAAkAA4BaJQBdgCPQTa9wsoAA/PYDpS+wTpfWQoYWi+caoeM04usFuBFKEVM8B7No4YoVpo75h7MkLMoAAA==" },
   // Static preview rendered from OpenStreetMap tiles (© OpenStreetMap contributors, ODbL) — centred on site.map
   map: { src: "/images/anami-map.webp", width: 1600, height: 1000, blur: "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADwAQCdASoMAAgAAoBCJZQC7AELXYpkCAAA/vfweChSRlgfOztsM/WB7GYfQAAA" },
   editorial: { src: "/images/anami-office-green-wall.webp", width: 1800, height: 1260, blur: "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoMAAgAA4BaJZQCdADdKjUpUAD0TCv7KYUwbZRtsaUmHkEOBfgrA1R0N/tlQXUE5d1mTnTJAYYAAA==" },

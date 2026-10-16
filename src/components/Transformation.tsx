@@ -131,7 +131,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
       const key = `${below}:${above}:${mix.toFixed(2)}:${canvas.width}`;
       if (key === lastDrawn) return;
       lastDrawn = key;
-      ctx.imageSmoothingQuality = "high";
+      ctx.imageSmoothingQuality = "medium";
       ctx.globalAlpha = 1;
       cover(images[below]!);
       if (mix > 0.01) {
@@ -168,7 +168,8 @@ export default function Transformation({ t }: { t: Dictionary }) {
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Capped at 1.5: two full-screen drawImage calls per frame at 2x were the main cost while scrubbing
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const width = Math.round(box.clientWidth * dpr);
       const height = Math.round(box.clientHeight * dpr);
       if (canvas.width !== width || canvas.height !== height) {

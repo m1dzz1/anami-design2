@@ -1,23 +1,31 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Barlow_Condensed, Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { isLocale, locales, localeMeta, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { ogImage, site } from "@/content/site";
 import "../globals.css";
 
-const display = Barlow_Condensed({
-  subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700"],
+// Self-hosted (Latin + Latin Extended subsets of the Google Fonts originals) so neither dev nor build
+// depends on reaching fonts.googleapis.com
+const barlowCondensed = localFont({
+  src: [
+    { path: "../fonts/BarlowCondensed-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/BarlowCondensed-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/BarlowCondensed-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-barlow-condensed",
   display: "swap",
+  fallback: ["Arial Narrow", "Arial", "sans-serif"],
 });
 
-const sans = Manrope({
-  subsets: ["latin", "latin-ext"],
+const manrope = localFont({
   // Variable font — one file covers every weight instead of five
+  src: "../fonts/Manrope-Variable.woff2",
+  weight: "200 800",
   variable: "--font-manrope",
   display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
 export function generateStaticParams() {
@@ -100,7 +108,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html
       lang={localeMeta[lang as Locale].htmlLang}
       data-scroll-behavior="smooth"
-      className={`${display.variable} ${sans.variable}`}>
+      className={`${barlowCondensed.variable} ${manrope.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -26,6 +26,9 @@ const BEAM_OUTLINE: [number, number][] = [
   [554, 948],
   [612, 1314],
 ];
+// Outer edge of the round arch in the same photograph: a circle (centre x, centre y, radius in image pixels),
+// fitted to the edge where the arch meets the pale wall
+const ARCH = { cx: 1311.6, cy: 846.4, r: 550.9 };
 // Points along the cut (evenly spaced over the bar height); open and closed shapes share the count so clip-path can animate
 const EDGE_SAMPLES = 24;
 
@@ -39,9 +42,18 @@ function beamXAt(y: number) {
   }
   return BEAM_OUTLINE[BEAM_OUTLINE.length - 1][1];
 }
-// Width of the fade on the links side and the narrowest gap worth opening, in px
-const FADE_WIDTH = 112;
+function archXAt(y: number) {
+  const dy = Math.min(Math.abs(y - ARCH.cy), ARCH.r);
+  return ARCH.cx + Math.sqrt(ARCH.r * ARCH.r - dy * dy);
+}
+// Narrowest gap between the two cuts worth opening, and the room kept between the arch and the first link, in px
 const MIN_GAP = 64;
+const LINKS_CLEARANCE = 20;
+// Room kept to the right of the language switcher, and the tightest gap the links may close up to, in px
+const LINKS_EDGE = 20;
+const MIN_LINK_GAP = 14;
+// The split bar is only shown at the very top: the first bit of scrolling brings back the plain bar
+const SPLIT_MAX_SCROLL = 8;
 
 export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
   const [scrolled, setScrolled] = useState(false);
@@ -54,76 +66,133 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
 
   useRestoreLangPosition(lang);
 
-  // Reference: at the top the bar is split so the hero ceiling shows through the middle; it closes once the ceiling has scrolled past.
-  // The logo panel ends exactly on the beam's edge in the photograph, so the edge is mapped from image to viewport coordinates.
+  // Reference: at the top the bar is split so the hero ceiling shows through the middle; it closes as soon as the page scrolls.
+  // The logo panel ends exactly on the beam's edge in the photograph and the links panel starts on the arch's edge,
+  // so both edges are mapped from image to viewport coordinates.
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1024px)");
     // Same query as the <source> in Hero — portrait screens get the mobile crop, where the beam is elsewhere
     const portraitCrop = window.matchMedia("(max-aspect-ratio: 1/1)");
     let frame = 0;
-    // The hero parallax (Motion.tsx, scrub 0.4) keeps moving the photograph after the last scroll event,
-    // so keep re-measuring every frame until it has come to rest
+    // The hero parallax (Motion.tsx, scrub 0.4) keeps moving the photograph after the last scroll event and the
+    // CSS settle animation scales it for 1.8s after load, so keep re-measuring every frame until it has come to rest
     let settleUntil = 0;
+    let wasSplit = false;
+    let animateTimer = 0;
+
+
+    // Last values written, so unchanged clip paths don't restyle the (backdrop-filtered) bar every frame
+    const written: Record<string, string> = {};
+    const write = (header: HTMLElement, name: string, value: string) => {
+      if (written[name] === value) return;
+      written[name] = value;
+      header.style.setProperty(name, value);
+    };
+
+    const close = (header: HTMLElement | null) => {
+      setSplit(false);
+      wasSplit = false;
+      if (!header) return;
+      write(header, "--links-shift", "0px");
+      write(header, "--links-squeeze", "0px");
+    };
 
     const update = () => {
       frame = 0;
-      if (performance.now() < settleUntil) frame = requestAnimationFrame(update);
       setScrolled(window.scrollY > 24);
       const header = headerRef.current;
       const img = document.querySelector<HTMLImageElement>("[data-hero-bg] img");
-      if (!header || !img || !desktop.matches || portraitCrop.matches || window.scrollY > window.innerHeight * 0.22) {
-        setSplit(false);
+      if (!header || !img || !desktop.matches || portraitCrop.matches || window.scrollY > SPLIT_MAX_SCROLL) {
+        close(header);
         return;
       }
+      // Only near the top is there anything to follow
+      if (performance.now() < settleUntil) frame = requestAnimationFrame(update);
 
-      // object-fit: cover geometry of the hero photograph (layout box, unaffected by the settle transform)
-      const box = img.closest("[data-hero-bg]")!.getBoundingClientRect();
-      const w = img.offsetWidth;
-      const h = img.offsetHeight;
+      // object-fit: cover geometry of the hero photograph as painted — the rect includes the settle scale and the
+      // parallax shift, which are uniform transforms, so the cover maths holds on the transformed box
+      const box = img.getBoundingClientRect();
+      const w = box.width;
+      const h = box.height;
       const scale = Math.max(w / HERO_IMAGE.width, h / HERO_IMAGE.height);
       // Mirrors `.hero-bg` in globals.css: 62% across, the 2K framing row at the top edge (or as low as the image allows)
       const originX = box.left + (w - HERO_IMAGE.width * scale) * 0.62;
       const originY = box.top - Math.min(HERO_IMAGE.frameTop * HERO_IMAGE.height * scale, HERO_IMAGE.height * scale - h);
-      const edgeAt = (viewportY: number) => {
-        const imageY = (viewportY - originY) / scale;
-        return originX + beamXAt(imageY) * scale;
-      };
-
       const barHeight = header.offsetHeight;
-      const edge = Array.from({ length: EDGE_SAMPLES + 1 }, (_, i) => {
-        const y = (barHeight * i) / EDGE_SAMPLES;
-        return { y, x: edgeAt(y) };
-      });
+      const trace = (xAt: (imageY: number) => number) =>
+        Array.from({ length: EDGE_SAMPLES + 1 }, (_, i) => {
+          const y = (barHeight * i) / EDGE_SAMPLES;
+          return { y, x: originX + xAt((y - originY) / scale) * scale };
+        });
+      const beam = trace(beamXAt);
+      const arch = trace(archXAt);
 
-      // Edge 2 fades in just before the links; on screens where the beam lands next to them there is no room for a gap
-      const linksLeft = header.querySelector("ul")!.getBoundingClientRect().left;
-      const fadeEnd = linksLeft - 24;
-      if (fadeEnd - FADE_WIDTH - Math.max(...edge.map((p) => p.x)) < MIN_GAP) {
-        setSplit(false);
+      // On screens where the beam and the arch land (almost) on top of each other there is no room for a gap
+      if (Math.min(...arch.map((p) => p.x)) - Math.max(...beam.map((p) => p.x)) < MIN_GAP) {
+        close(header);
         return;
       }
 
-      const polygon = (xOf: (p: { x: number }) => string) =>
-        `polygon(0 0, ${edge.map((p) => `${xOf(p)} ${p.y.toFixed(1)}px`).join(", ")}, 0 100%)`;
-      header.style.setProperty("--clip-open", polygon((p) => `${p.x.toFixed(1)}px`));
-      header.style.setProperty("--clip-closed", polygon(() => "100%"));
-      header.style.setProperty("--fade-end", `${fadeEnd.toFixed(1)}px`);
+      // The links have to sit on the links panel, so they slide right until they clear the arch. On laptop widths
+      // there isn't quite enough room beside it, so the gaps between the links tighten as well; if even that is not
+      // enough the bar stays closed instead
+      const links = header.querySelector<HTMLElement>("[data-nav-links]")!;
+      const list = links.querySelector("ul")!;
+      const items = [...list.children] as HTMLElement[];
+      const switcher = links.lastElementChild as HTMLElement;
+      const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+      const switcherGap = parseFloat(getComputedStyle(switcher).marginLeft) || 0;
+      const gaps = items.length; // between the links, plus the one before the language switcher
+      const natural =
+        items.reduce((sum, item) => sum + item.offsetWidth, 0) + gap * (items.length - 1) + switcherGap + switcher.offsetWidth;
+      // Untransformed right edge (the group is right-aligned, so squeezing it never moves this edge)
+      const linksBox = list.getBoundingClientRect();
+      const baseRight = links.getBoundingClientRect().right - new DOMMatrix(getComputedStyle(links).transform).m41;
+      // The arch leans right going down, so the bottom of the link boxes is where it comes closest
+      const start = originX + archXAt((linksBox.bottom - originY) / scale) * scale + LINKS_CLEARANCE;
+      const limit = document.documentElement.clientWidth - LINKS_EDGE;
+      const squeeze = Math.max(0, Math.ceil((natural - (limit - start)) / gaps));
+      if (squeeze > Math.min(gap, switcherGap) - MIN_LINK_GAP) {
+        close(header);
+        return;
+      }
+      const shift = squeeze
+        ? Math.floor(limit - baseRight)
+        : Math.max(0, Math.ceil(start - (baseRight - natural)));
+      write(header, "--links-shift", `${shift}px`);
+      write(header, "--links-squeeze", `${squeeze}px`);
+
+      const points = (edge: { x: number; y: number }[], xOf: (p: { x: number }) => string) =>
+        edge.map((p) => `${xOf(p)} ${p.y.toFixed(1)}px`).join(", ");
+      write(header, "--clip-open", `polygon(0 0, ${points(beam, (p) => `${p.x.toFixed(1)}px`)}, 0 100%)`);
+      write(header, "--clip-closed", `polygon(0 0, ${points(beam, () => "100%")}, 0 100%)`);
+      write(header, "--clip-links", `polygon(100% 0, ${points(arch, (p) => `${p.x.toFixed(1)}px`)}, 100% 100%)`);
+      // The clip only eases while the bar opens; afterwards it follows the photograph frame by frame,
+      // otherwise the transition trails behind the moving image and leaves a sliver between edge and beam
+      if (!wasSplit) {
+        wasSplit = true;
+        header.dataset.splitAnimating = "true";
+        window.clearTimeout(animateTimer);
+        animateTimer = window.setTimeout(() => delete header.dataset.splitAnimating, 750);
+      }
       setSplit(true);
     };
-    const schedule = () => {
-      settleUntil = performance.now() + 800;
+    const schedule = (duration = 800) => {
+      settleUntil = Math.max(settleUntil, performance.now() + duration);
       if (!frame) frame = requestAnimationFrame(update);
     };
+    const onEvent = () => schedule();
 
-    schedule();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    window.addEventListener("load", schedule);
+    schedule(2000);
+    window.addEventListener("scroll", onEvent, { passive: true });
+    window.addEventListener("resize", onEvent);
+    window.addEventListener("load", onEvent);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      window.removeEventListener("load", schedule);
+      window.clearTimeout(animateTimer);
+      window.removeEventListener("scroll", onEvent);
+      window.removeEventListener("resize", onEvent);
+      window.removeEventListener("load", onEvent);
     };
   }, []);
 
@@ -203,7 +272,7 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
             <Logo variant="color" />
           </a>
 
-          <div className="hidden items-center lg:flex">
+          <div data-nav-links className="nav-links hidden items-center lg:flex">
             <nav aria-label={t.a11y.mainNav}>
               <ul className="flex items-center gap-7 xl:gap-9">
                 {navItems.map((item) => (
