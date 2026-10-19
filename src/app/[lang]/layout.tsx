@@ -108,6 +108,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html
       lang={localeMeta[lang as Locale].htmlLang}
       data-scroll-behavior="smooth"
+      // The intro script (Intro.tsx) adds a class here before hydration
+      suppressHydrationWarning
       className={`${barlowCondensed.variable} ${manrope.variable}`}>
       <body>{children}</body>
     </html>

@@ -10,6 +10,7 @@ import Services from "@/components/Services";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Motion from "@/components/Motion";
+import Intro, { INTRO_SCRIPT } from "@/components/Intro";
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -109,6 +110,9 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
+      {/* Must run before the intro overlay is parsed, so the first paint already knows whether to show it */}
+      <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
+      <Intro />
       <a href="#main" className="skip-link">
         {t.a11y.skipToContent}
       </a>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 import type { Dictionary } from "@/i18n/types";
 import { sectionIds, transformationFrames as frames } from "@/content/site";
+import { createFrameRenderer, type FrameHandle } from "@/lib/frame-renderer";
 
 type FrameSet = "lg" | "sm";
 
@@ -14,6 +15,9 @@ const leadIn = 0.05;
 const leadOut = 0.12;
 // Concurrent frame requests
 const MAX_IN_FLIGHT = 6;
+// Frames kept decoded on either side of the scroll position, and decodes running at once
+const DECODE_WINDOW = 5;
+const MAX_DECODES = 3;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -50,15 +54,28 @@ export default function Transformation({ t }: { t: Dictionary }) {
     const section = sectionRef.current;
     const box = stageRef.current;
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d", { alpha: false });
-    if (!section || !box || !canvas || !ctx) return;
+    if (!section || !box || !canvas) return;
     // Reduced motion gets the static layout from CSS — no frames are downloaded at all
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // After a lost GPU context every texture is gone: decode the window around the position again
+    const renderer = createFrameRenderer(canvas, () => {
+      bitmaps.clear();
+      lastDrawn = "";
+      requestTick();
+    });
+    if (!renderer) return;
 
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
     const lightweight = Boolean(connection?.saveData || /2g|3g/.test(connection?.effectiveType ?? ""));
 
-    const images: (HTMLImageElement | null)[] = new Array(frames.count).fill(null);
+    // Frames are kept compressed (a few MB for the whole sequence) and only a window around the scroll position is
+    // decoded, off the main thread, then handed to the GPU once (frame-renderer.ts), which also does the scaling.
+    // Holding all 81 decoded full-HD frames would take ~670 MB, so the browser kept evicting them and re-decoding on
+    // the main thread inside drawImage, which held scrolling through the section to 30 fps. (Decoding at the drawn
+    // size with createImageBitmap's resize options is no better: Chrome resizes on the main thread.)
+    const blobs: (Blob | null)[] = new Array(frames.count).fill(null);
+    const bitmaps = new Map<number, FrameHandle>();
+    const decoding = new Set<number>();
     let set: FrameSet | null = null;
     let generation = 0;
     let current = 0;
@@ -66,14 +83,31 @@ export default function Transformation({ t }: { t: Dictionary }) {
     let lastDrawn = "";
     let raf = 0;
     let started = false;
+    let shown = false;
     let currentStage = 0;
 
     const pickSet = (): FrameSet => (box.clientWidth / Math.max(1, box.clientHeight) < 0.95 ? "sm" : "lg");
 
+    const dropBitmaps = (keep?: (index: number) => boolean) => {
+      for (const [index, handle] of bitmaps) {
+        if (keep?.(index)) continue;
+        renderer.release(handle);
+        bitmaps.delete(index);
+      }
+    };
+
+    /** Cover-fit size of a frame on the canvas. */
+    const coverSize = () => {
+      const natural = frames[set ?? "lg"];
+      const scale = Math.max(canvas.width / natural.width, canvas.height / natural.height);
+      return { width: natural.width * scale, height: natural.height * scale };
+    };
+
     const load = (frameSet: FrameSet) => {
       set = frameSet;
       const gen = ++generation;
-      images.fill(null);
+      blobs.fill(null);
+      dropBitmaps();
       lastDrawn = "";
       // Phones and data-saver connections take every second frame; the cross-fade covers the gaps
       const queue = loadOrder(frames.count, lightweight || frameSet === "sm" ? 2 : 1);
@@ -81,17 +115,12 @@ export default function Transformation({ t }: { t: Dictionary }) {
       const next = () => {
         while (active < MAX_IN_FLIGHT && queue.length) {
           const index = queue.shift()!;
-          const img = new Image();
-          img.decoding = "async";
-          img.src = frames.path(frameSet, index);
           active++;
-          img
-            .decode()
-            .then(() => {
+          fetch(frames.path(frameSet, index))
+            .then((response) => (response.ok ? response.blob() : Promise.reject()))
+            .then((blob) => {
               if (gen !== generation) return;
-              images[index] = img;
-              if (index === 0) setReady(true);
-              lastDrawn = "";
+              blobs[index] = blob;
               requestTick();
             })
             .catch(() => {})
@@ -104,40 +133,69 @@ export default function Transformation({ t }: { t: Dictionary }) {
       next();
     };
 
+    const decode = (index: number) => {
+      decoding.add(index);
+      const gen = generation;
+      createImageBitmap(blobs[index]!)
+        .then((bitmap) => {
+          if (gen !== generation) {
+            bitmap.close();
+            return;
+          }
+          const handle = renderer.upload(bitmap);
+          if (handle) bitmaps.set(index, handle);
+          lastDrawn = "";
+        })
+        .catch(() => {})
+        .finally(() => {
+          decoding.delete(index);
+          requestTick();
+        });
+    };
+
+    /** Keeps the frames around the scroll position decoded, nearest first (ahead of the scroll), and lets the rest go. */
+    const decodeAround = () => {
+      const low = Math.max(0, Math.floor(Math.min(current, target)) - DECODE_WINDOW);
+      const high = Math.min(frames.count - 1, Math.ceil(Math.max(current, target)) + DECODE_WINDOW);
+      dropBitmaps((index) => index >= low - 2 && index <= high + 2);
+      const heading = target >= current ? 1 : -1;
+      const from = Math.round(target);
+      for (let step = 0; step <= high - low && decoding.size < MAX_DECODES; step++) {
+        for (const index of step ? [from + heading * step, from - heading * step] : [from]) {
+          if (decoding.size >= MAX_DECODES) break;
+          if (index < low || index > high || !blobs[index] || bitmaps.has(index) || decoding.has(index)) continue;
+          decode(index);
+        }
+      }
+    };
+
     /** Closest decoded frames at or below / above `position`. */
     const neighbours = (position: number) => {
       let below = -1;
       let above = -1;
-      for (let i = Math.floor(position); i >= 0; i--) if (images[i]) { below = i; break; }
-      for (let i = Math.ceil(position); i < frames.count; i++) if (images[i]) { above = i; break; }
+      for (let i = Math.floor(position); i >= 0; i--) if (bitmaps.has(i)) { below = i; break; }
+      for (let i = Math.ceil(position); i < frames.count; i++) if (bitmaps.has(i)) { above = i; break; }
       return { below, above };
     };
 
-    const cover = (img: HTMLImageElement) => {
-      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      const w = img.naturalWidth * scale;
-      const h = img.naturalHeight * scale;
-      // Landscape frames keep the timber column and the green wall in view on narrower screens
-      const focusX = set === "lg" ? 0.58 : 0.5;
-      ctx.drawImage(img, (canvas.width - w) * focusX, (canvas.height - h) / 2, w, h);
-    };
-
+    // With nothing decoded near the position yet (a fast fling) the canvas keeps its last frame for the few ms it takes
     const draw = () => {
       let { below, above } = neighbours(current);
       if (below < 0) below = above;
       if (above < 0) above = below;
       if (below < 0) return;
       const mix = above === below ? 0 : (current - below) / (above - below);
-      const key = `${below}:${above}:${mix.toFixed(2)}:${canvas.width}`;
+      const key = `${below}:${above}:${mix.toFixed(2)}:${canvas.width}x${canvas.height}`;
       if (key === lastDrawn) return;
       lastDrawn = key;
-      ctx.imageSmoothingQuality = "medium";
-      ctx.globalAlpha = 1;
-      cover(images[below]!);
-      if (mix > 0.01) {
-        ctx.globalAlpha = mix;
-        cover(images[above]!);
-        ctx.globalAlpha = 1;
+      const { width, height } = coverSize();
+      // Landscape frames keep the timber column and the green wall in view on narrower screens
+      const focusX = set === "lg" ? 0.58 : 0.5;
+      const rect = { x: (canvas.width - width) * focusX, y: (canvas.height - height) / 2, width, height };
+      renderer.draw(bitmaps.get(below)!, bitmaps.get(above)!, mix > 0.01 ? mix : 0, rect);
+      if (!shown) {
+        shown = true;
+        setReady(true);
       }
     };
 
@@ -159,6 +217,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
       measure();
       const delta = target - current;
       current = Math.abs(delta) < 0.02 ? target : current + delta * 0.2;
+      if (started) decodeAround();
       draw();
       if (current !== target) requestTick();
     };
@@ -168,7 +227,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
     }
 
     const resize = () => {
-      // Capped at 1.5: two full-screen drawImage calls per frame at 2x were the main cost while scrubbing
+      // Capped at 1.5: the frames are full HD at most, so a denser canvas would only cost fill rate
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const width = Math.round(box.clientWidth * dpr);
       const height = Math.round(box.clientHeight * dpr);
@@ -210,6 +269,8 @@ export default function Transformation({ t }: { t: Dictionary }) {
 
     return () => {
       generation++;
+      dropBitmaps();
+      renderer.dispose();
       preload.disconnect();
       onScreen.disconnect();
       resizeObserver.disconnect();

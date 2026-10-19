@@ -199,13 +199,16 @@ export default function ContactForm({ lang, t }: { lang: Locale; t: FormText }) 
           maxLength={LIMITS.messageMax}
           required
           placeholder={t.messagePlaceholder}
-          className="field min-h-[7.5rem] resize-y"
+          // Grows with the message instead of a drag handle: the native resize grip cost a 65 ms GPU hitch the
+          // first time the contact section scrolled into view
+          className="field min-h-[7.5rem] max-h-[20rem] resize-none [field-sizing:content]"
         />
         {errorText("message")}
       </div>
 
-      {/* Honeypot — hidden from people and assistive tech, attractive to bots */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+      {/* Honeypot — hidden from people and assistive tech, attractive to bots. Clipped in place rather than parked
+          off-screen at -9999px, which stretched the bounds of the block the reveal animation composites */}
+      <div aria-hidden="true" className="sr-only">
         <label htmlFor="contact-website">{t.honeypot}</label>
         <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>

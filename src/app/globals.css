@@ -56,6 +56,7 @@
   --z-menu: 40;
   --z-header: 50;
   --z-skip: 60;
+  --z-intro: 70;
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -389,12 +390,14 @@ body {
   transform: translateX(var(--links-shift, 0px));
 }
 
-/* On laptop widths the gaps between the links tighten a little to fit beside the arch (--links-squeeze) */
-.site-header[data-split="true"] .nav-links li + li {
+/* On laptop widths the gaps between the links tighten a little to fit beside the arch (--links-squeeze).
+   Not tied to [data-split] so Header can measure the squeezed group in the same frame it opens the bar;
+   the variable is 0 whenever the bar is closed. */
+.nav-links li + li {
   margin-left: calc(-1 * var(--links-squeeze, 0px));
 }
 
-.site-header[data-split="true"] .nav-links nav {
+.nav-links nav {
   margin-right: calc(-1 * var(--links-squeeze, 0px));
 }
 
@@ -960,6 +963,152 @@ body {
 }
 
 /* ==========================================================================
+   First-visit intro (Intro.tsx): a line sketch of a tower being built.
+   Hidden unless the inline script marked this visit with .intro-playing before first paint.
+   ========================================================================== */
+.intro {
+  display: none;
+}
+
+.intro-playing .intro,
+.intro-leaving .intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(70% 60% at 50% 45%, rgb(30 70 77 / 0.9) 0%, rgb(30 70 77 / 0) 100%),
+    var(--petrol-deep);
+  color: var(--teal-light);
+}
+
+/* No scrolling under the curtain; the gutter stays so nothing reflows when it lifts */
+.intro-playing {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+.intro-inner {
+  width: min(30rem, 86vw);
+}
+
+.intro-sketch {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  stroke-width: 1.15;
+}
+
+.intro-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw var(--t, 0.6s) var(--ease-out) var(--d, 0s) forwards;
+}
+
+/* Columns climb at a steady builder's pace rather than shooting up */
+.intro-rise {
+  animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.intro-pane {
+  opacity: 0;
+  animation: intro-pane 0.7s var(--ease-out) var(--d, 0s) forwards;
+}
+
+.intro-hook {
+  transform-box: view-box;
+  transform-origin: 370px 54px;
+  animation: intro-sway 2.4s ease-in-out 2.2s infinite alternate;
+}
+
+.intro-meta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+  opacity: 0;
+  animation: fade-up 0.9s var(--ease-out) 0.5s forwards;
+}
+
+/* The logo is sized in em (Logo.tsx), so its size is set through the font size */
+.intro-logo {
+  font-size: 1.75rem;
+  color: var(--white);
+}
+
+.intro-count {
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--teal-light);
+}
+
+.intro-bar {
+  display: block;
+  height: 1px;
+  margin-top: 0.9rem;
+  background: var(--teal-light);
+  transform: scaleX(var(--intro-p, 0));
+  transform-origin: left;
+}
+
+/* Exit: the curtain lifts from the bottom while the sketch drifts up and out */
+.intro-leaving .intro {
+  pointer-events: none;
+  animation: intro-out 1s var(--ease-in-out) forwards;
+}
+
+.intro-leaving .intro-inner {
+  animation: intro-inner-out 0.8s var(--ease-in-out) forwards;
+}
+
+/* The hero entrance waits under the curtain and plays as it lifts */
+.intro-playing .hero-bg,
+.intro-playing .enter,
+.intro-playing .enter-line {
+  animation-play-state: paused;
+}
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-pane {
+  to {
+    opacity: var(--o, 0.2);
+  }
+}
+
+@keyframes intro-sway {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes intro-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes intro-inner-out {
+  to {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+}
+
+/* ==========================================================================
    Entrance animations (CSS-only so the hero never waits for JavaScript — protects LCP)
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
@@ -1055,6 +1204,18 @@ body {
     transform: none;
   }
 }
+}
+
+/* Laptop widths: the bar is tight beside the arch, so the desktop links run 2px smaller up to the wide layout.
+   Unlayered so it wins over the size utilities on the links. */
+@media (min-width: 1024px) and (max-width: 1679.98px) {
+  .nav-links .nav-link {
+    font-size: 0.8125rem;
+  }
+
+  .nav-links .lang-link {
+    font-size: 0.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

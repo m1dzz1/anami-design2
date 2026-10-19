@@ -7,6 +7,7 @@ import type { Dictionary } from "@/i18n/types";
 import { sectionIds } from "@/content/site";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { INTRO_END_EVENT } from "./Intro";
 import { useRestoreLangPosition } from "./useRestoreLangPosition";
 
 type NavKey = keyof Dictionary["nav"];
@@ -50,7 +51,7 @@ function archXAt(y: number) {
 const MIN_GAP = 64;
 const LINKS_CLEARANCE = 20;
 // Room kept to the right of the language switcher, and the tightest gap the links may close up to, in px
-const LINKS_EDGE = 20;
+const LINKS_EDGE = 40;
 const MIN_LINK_GAP = 14;
 // The split bar is only shown at the very top: the first bit of scrolling brings back the plain bar
 const SPLIT_MAX_SCROLL = 8;
@@ -145,22 +146,30 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
       const gaps = items.length; // between the links, plus the one before the language switcher
       const natural =
         items.reduce((sum, item) => sum + item.offsetWidth, 0) + gap * (items.length - 1) + switcherGap + switcher.offsetWidth;
-      // Untransformed right edge (the group is right-aligned, so squeezing it never moves this edge)
-      const linksBox = list.getBoundingClientRect();
-      const baseRight = links.getBoundingClientRect().right - new DOMMatrix(getComputedStyle(links).transform).m41;
       // The arch leans right going down, so the bottom of the link boxes is where it comes closest
-      const start = originX + archXAt((linksBox.bottom - originY) / scale) * scale + LINKS_CLEARANCE;
+      const start = originX + archXAt((list.getBoundingClientRect().bottom - originY) / scale) * scale + LINKS_CLEARANCE;
       const limit = document.documentElement.clientWidth - LINKS_EDGE;
       const squeeze = Math.max(0, Math.ceil((natural - (limit - start)) / gaps));
       if (squeeze > Math.min(gap, switcherGap) - MIN_LINK_GAP) {
         close(header);
         return;
       }
-      const shift = squeeze
-        ? Math.floor(limit - baseRight)
-        : Math.max(0, Math.ceil(start - (baseRight - natural)));
-      write(header, "--links-shift", `${shift}px`);
       write(header, "--links-squeeze", `${squeeze}px`);
+      // Where the links actually run from and to with the squeeze applied, without the slide (the negative margins
+      // let a squeezed group overflow its own box, so the box itself can't be trusted)
+      const slide = new DOMMatrix(getComputedStyle(links).transform).m41;
+      const contentLeft = items[0].getBoundingClientRect().left - slide;
+      const contentRight = switcher.getBoundingClientRect().right - slide;
+      if (contentRight - contentLeft > limit - start + 1) {
+        close(header);
+        return;
+      }
+      // A squeezed group is pushed right up to the edge padding; otherwise it slides just far enough to clear the
+      // arch, and never past the edge padding
+      const shift = Math.floor(
+        squeeze ? limit - contentRight : Math.min(limit - contentRight, Math.max(0, start - contentLeft)),
+      );
+      write(header, "--links-shift", `${shift}px`);
 
       const points = (edge: { x: number; y: number }[], xOf: (p: { x: number }) => string) =>
         edge.map((p) => `${xOf(p)} ${p.y.toFixed(1)}px`).join(", ");
@@ -183,11 +192,18 @@ export default function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
     };
     const onEvent = () => schedule();
 
+    // The hero photograph only starts settling once the intro (Intro.tsx) lifts, and the link widths change when
+    // the web fonts arrive — both call for a fresh measurement
+    const onSettle = () => schedule(2200);
+
     schedule(2000);
     window.addEventListener("scroll", onEvent, { passive: true });
     window.addEventListener("resize", onEvent);
     window.addEventListener("load", onEvent);
+    window.addEventListener(INTRO_END_EVENT, onSettle);
+    document.fonts?.ready.then(onSettle);
     return () => {
+      window.removeEventListener(INTRO_END_EVENT, onSettle);
       cancelAnimationFrame(frame);
       window.clearTimeout(animateTimer);
       window.removeEventListener("scroll", onEvent);

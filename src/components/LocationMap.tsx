@@ -53,7 +53,8 @@ export default function LocationMap({ title, imageAlt, activateLabel }: { title:
         fill
         placeholder="blur"
         blurDataURL={images.map.blur}
-        sizes="(min-width: 1280px) 34vw, (min-width: 768px) 90vw, 100vw"
+        // The map spans the whole container (the viewport less the gutters) at every width
+        sizes="90vw"
         className="object-cover transition-transform duration-[1.2s] ease-out-expo group-hover:scale-[1.03]"
       />
       {/* Location pin — the static map is centred on the address */}
