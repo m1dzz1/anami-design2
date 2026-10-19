@@ -329,7 +329,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
           <div aria-hidden="true" className="tr-grade absolute inset-0" />
         </div>
 
-        <div className="tr-content container-x relative flex h-full flex-col justify-end pb-[max(1.5rem,4svh)] md:justify-center md:pb-0 md:pt-[var(--nav-h)]">
+        <div className="tr-content container-x relative flex h-full flex-col justify-end pb-[calc(var(--curve-h)+max(1.5rem,4svh))] md:justify-center md:pb-0 md:pt-[var(--nav-h)]">
           <div className="max-w-[min(38rem,48vw)] max-md:max-w-[31rem]">
             <p aria-hidden="true" className="tr-motion-only text-[0.75rem] font-bold uppercase tracking-[0.18em] text-teal-light">
               0{stage + 1} <span className="text-white/50">/</span> {steps[stage].title}
