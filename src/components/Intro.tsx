@@ -5,14 +5,17 @@ import Logo from "./Logo";
 
 /** Fired on window when the intro starts lifting, so layout that follows the hero (Header) can re-measure. */
 export const INTRO_END_EVENT = "anami:intro-end";
+/** Holds when the intro last played (ms since epoch). */
 export const INTRO_SEEN_KEY = "anami:intro-seen";
+/** After playing, the intro rests this long before a page load may show it again. */
+const INTRO_REST_MS = 5 * 60 * 1000;
 
 /**
  * Runs before first paint (inlined by the page ahead of <Intro>): decides whether this visit gets the intro.
- * Only the first visit does (or any URL with ?intro); never with reduced motion or right after a language switch.
- * The timeout is a failsafe so the page can never stay covered if the app fails to hydrate.
+ * It plays when it hasn't for INTRO_REST_MS (or on any URL with ?intro); never with reduced motion or right after
+ * a language switch. The timeout is a failsafe so the page can never stay covered if the app fails to hydrate.
  */
-export const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,f=/[?&]intro\\b/.test(location.search);if(!f&&(localStorage.getItem("${INTRO_SEEN_KEY}")||sessionStorage.getItem("anami:lang-switch")||matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.classList.add("intro-playing");setTimeout(function(){d.classList.remove("intro-playing","intro-leaving")},9000)}catch(e){}})()`;
+export const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,f=/[?&]intro\\b/.test(location.search),t=+localStorage.getItem("${INTRO_SEEN_KEY}")||0;if(!f&&(Date.now()-t<${INTRO_REST_MS}||sessionStorage.getItem("anami:lang-switch")||matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.classList.add("intro-playing");setTimeout(function(){d.classList.remove("intro-playing","intro-leaving")},9000)}catch(e){}})()`;
 
 // The build itself takes ~2.4 s; the intro holds a little longer only if the hero photograph isn't ready yet
 const MIN_MS = 2600;
@@ -146,9 +149,9 @@ function Building() {
 }
 
 /**
- * First-visit intro: an architectural line sketch of an office tower being built, while the hero loads underneath.
- * The overlay is server-rendered but hidden unless INTRO_SCRIPT marked this visit before first paint, so it never
- * flashes for returning visitors. While it plays, the hero's own entrance is paused (globals.css) and starts as
+ * Load intro (at most once every five minutes): an architectural line sketch of an office tower being built, while
+ * the hero loads underneath. The overlay is server-rendered but hidden unless INTRO_SCRIPT marked this visit before first paint, so it never
+ * flashes on loads that skip it. While it plays, the hero's own entrance is paused (globals.css) and starts as
  * the overlay lifts.
  */
 export default function Intro() {
@@ -158,7 +161,7 @@ export default function Intro() {
 
   useEffect(() => {
     const html = document.documentElement;
-    // Returning visitor: the overlay stays display: none (no layout or paint cost)
+    // Skipped this load: the overlay stays display: none (no layout or paint cost)
     if (!html.classList.contains("intro-playing")) return;
 
     const started = performance.now();
@@ -180,7 +183,7 @@ export default function Intro() {
     const leave = () => {
       leaving = true;
       try {
-        localStorage.setItem(INTRO_SEEN_KEY, "1");
+        localStorage.setItem(INTRO_SEEN_KEY, String(Date.now()));
       } catch {}
       html.classList.add("intro-leaving");
       html.classList.remove("intro-playing");

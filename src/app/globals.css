@@ -963,7 +963,7 @@ body {
 }
 
 /* ==========================================================================
-   First-visit intro (Intro.tsx): a line sketch of a tower being built.
+   Load intro (Intro.tsx, at most every five minutes): a line sketch of a tower being built.
    Hidden unless the inline script marked this visit with .intro-playing before first paint.
    ========================================================================== */
 .intro {
