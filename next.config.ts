@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Self-contained server.js build for the cPanel Node.js host (packaged by scripts/package-cpanel.mjs)
+  output: "standalone",
   poweredByHeader: false,
   // Gzip only in production: in dev it buys nothing locally and streaming large files through it
   // triggers Node's "MaxListenersExceededWarning: 11 drain listeners added to [Gzip]"
@@ -11,9 +13,18 @@ const nextConfig: NextConfig = {
     qualities: [70, 75],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
-  // Serbian is the default language
   async redirects() {
-    return [{ source: "/", destination: "/sr", permanent: false }];
+    return [
+      // One canonical host: www.anami.rs → anami.rs (matches site.url, canonical and hreflang links)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.anami.rs" }],
+        destination: "https://anami.rs/:path*",
+        permanent: true,
+      },
+      // Serbian is the default language
+      { source: "/", destination: "/sr", permanent: false },
+    ];
   },
   async headers() {
     return [

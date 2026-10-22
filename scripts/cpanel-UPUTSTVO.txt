@@ -1,0 +1,54 @@
+ANAMI — postavljanje sajta na cPanel hosting (anami.rs)
+=======================================================
+
+Sajt je Next.js aplikacija i radi kao Node.js aplikacija preko cPanel opcije "Setup Node.js App".
+Potreban je Node.js 20.9 ili noviji (preporuka: 22).
+
+1) UPLOAD
+   - cPanel → File Manager → u home folderu (NE u public_html) napravi folder, npr. "anami-app".
+   - Uploaduj anami-cpanel.zip u taj folder i uradi Extract.
+   - Unutra treba da budu: server.js, package.json, .next/, public/, UPUTSTVO.txt
+     (".next" je skriven folder — u File Manageru: Settings → "Show Hidden Files").
+
+2) PRE POVEZIVANJA DOMENA
+   - Ako je u public_html već neki stari sajt, napravi backup (Download/Compress) pre sledećeg koraka.
+
+3) NODE.JS APLIKACIJA
+   - cPanel → Setup Node.js App → Create Application:
+       Node.js version:          22.x (ili najnovija ponuđena, min. 20.9)
+       Application mode:         Production
+       Application root:         anami-app
+       Application URL:          anami.rs
+       Application startup file: server.js
+   - Create.
+
+4) PROMENLJIVE OKRUŽENJA (Environment variables, na istoj strani)
+       NODE_ENV             = production
+       CONTACT_FORM_SECRET  = dugačak nasumičan string (npr. 40+ slova i brojeva)
+       RESEND_API_KEY       = ključ sa resend.com        (kad klijent obezbedi)
+       CONTACT_FROM_EMAIL   = ANAMI web <web@anami.rs>   (domen mora biti verifikovan u Resend-u)
+       CONTACT_TO_EMAIL     = office@anami.rs
+   Bez RESEND_API_KEY i CONTACT_FROM_EMAIL forma radi, ali pri slanju kaže da slanje nije dostupno
+   i upućuje na office@anami.rs (nikad ne prikazuje lažni uspeh).
+   Save.
+
+5) INSTALACIJA I POKRETANJE
+   - Klikni "Run NPM Install" (instalira next/react i Linux verziju sharp-a za slike).
+   - Klikni "Restart".
+
+6) HTTPS I WWW
+   - cPanel → SSL/TLS Status → pokreni AutoSSL za anami.rs i www.anami.rs.
+   - cPanel → Domains → uključi "Force HTTPS Redirect" za anami.rs.
+   - www.anami.rs aplikacija sama trajno preusmerava na https://anami.rs (jedan kanonski domen).
+
+7) PROVERA
+   - https://anami.rs            → otvara /sr
+   - https://anami.rs/en         → engleska verzija
+   - https://anami.rs/sitemap.xml, /robots.txt, /llms.txt
+   - Pošalji probnu poruku kroz kontakt formu.
+   - Google Search Console: dodaj anami.rs i prijavi https://anami.rs/sitemap.xml
+
+AŽURIRANJE SAJTA
+   - Lokalno: npm run package:cpanel  → novi deploy/anami-cpanel.zip
+   - Na serveru: obriši stari .next folder u anami-app, uploaduj i raspakuj novi zip preko postojećeg,
+     pa u Setup Node.js App klikni "Restart" (i "Run NPM Install" ako su se menjale verzije paketa).

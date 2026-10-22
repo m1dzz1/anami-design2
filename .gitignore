@@ -44,3 +44,6 @@ next-env.d.ts
 
 # original source images (not used by the site)
 /img/
+
+# cPanel deploy package (npm run package:cpanel)
+/deploy/
