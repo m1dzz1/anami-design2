@@ -6,7 +6,7 @@ export const site = {
   name: "ANAMI",
   url: "https://anami.rs",
   email: "office@anami.rs",
-  // Telephone intentionally omitted — not yet confirmed by the client.
+  phone: { display: "066 500 7007", e164: "+381665007007" },
   address: {
     street: "Cara Dušana 266",
     postalCode: "11080",

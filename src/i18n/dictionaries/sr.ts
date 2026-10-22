@@ -194,6 +194,7 @@ const sr = {
       address: "Adresa",
       addressLines: ["Cara Dušana 266,", "11080 Beograd (Zemun),", "Srbija"],
       email: "Email",
+      phone: "Telefon",
       pib: "PIB",
       mb: "MB",
       bank: "Tekući račun kod ProCredit Banke:",

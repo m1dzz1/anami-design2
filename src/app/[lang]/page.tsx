@@ -33,6 +33,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         logo: { "@type": "ImageObject", url: `${site.url}/icon-512.png`, width: 512, height: 512 },
         image: `${site.url}${ogImage.src}`,
         email: site.email,
+        telephone: site.phone.e164,
         description: t.meta.description,
         slogan: t.about.statement.join(" "),
         keywords: t.meta.keywords.join(", "),
@@ -62,6 +63,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           "@type": "ContactPoint",
           contactType: "customer service",
           email: site.email,
+          telephone: site.phone.e164,
           availableLanguage: ["sr", "en"],
         },
         hasOfferCatalog: {

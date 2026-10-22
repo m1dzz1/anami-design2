@@ -1,4 +1,4 @@
-import { Building2, ExternalLink, FileText, Landmark, Mail, MapPin } from "lucide-react";
+import { Building2, ExternalLink, FileText, Landmark, Mail, MapPin, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { mapsLinkUrl, sectionIds, site } from "@/content/site";
@@ -28,6 +28,18 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
           className="inline-flex min-h-11 items-center text-white underline decoration-teal-light/50 underline-offset-4 transition-colors hover:decoration-teal-light"
         >
           {site.email}
+        </a>
+      ),
+    },
+    {
+      icon: Phone,
+      label: c.info.phone,
+      body: (
+        <a
+          href={`tel:${site.phone.e164}`}
+          className="inline-flex min-h-11 items-center whitespace-nowrap text-white tabular-nums underline decoration-teal-light/50 underline-offset-4 transition-colors hover:decoration-teal-light"
+        >
+          {site.phone.display}
         </a>
       ),
     },

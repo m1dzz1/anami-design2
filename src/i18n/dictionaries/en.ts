@@ -190,6 +190,7 @@ const en: Dictionary = {
       address: "Address",
       addressLines: ["Cara Dušana 266,", "11080 Belgrade (Zemun),", "Serbia"],
       email: "Email",
+      phone: "Phone",
       pib: "Tax ID (PIB)",
       mb: "Reg. No.",
       bank: "Current account with ProCredit Bank:",

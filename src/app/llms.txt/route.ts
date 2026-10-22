@@ -26,6 +26,7 @@ export function GET() {
     `- Legal name / brand: ${site.name}`,
     `- Address: ${street}, ${postalCode} ${city} (${district}), Serbia`,
     `- Email: ${site.email}`,
+    `- Phone: ${site.phone.e164} (${site.phone.display})`,
     `- Tax ID (PIB): ${site.pib}`,
     `- Company registration number (MB): ${site.registrationNumber}`,
     `- Map: ${mapsLinkUrl}`,
