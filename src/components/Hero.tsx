@@ -29,19 +29,22 @@ export default function Hero({ t }: { t: Dictionary }) {
 
       <div className="container-x relative flex flex-1 flex-col pt-[calc(var(--nav-h)+clamp(3rem,9vh,6rem))]">
         <div className="flex flex-1 items-center pb-10 lg:pb-14">
-          <div className="max-w-[44rem]">
+          <div className="max-w-[48rem]">
             <p className="enter kicker text-teal-light" style={{ animationDelay: "80ms" }}>
               {h.kicker}
             </p>
-            <h1 id="hero-title" className="display display-xl mt-6 text-white">
+            {/* One sentence for search engines, set as a two-line statement plus a smaller accent line */}
+            <h1 id="hero-title" className="display hero-title mt-6 text-white">
               <span className="enter-line block" style={{ animationDelay: "140ms" }}>
-                {h.titleBrand}
-              </span>
-              <span className="enter-line block" style={{ animationDelay: "230ms" }}>
                 {h.titleLine1}
               </span>
-              <span className="enter-line block text-teal-light" style={{ animationDelay: "320ms" }}>
+              {" "}
+              <span className="enter-line block" style={{ animationDelay: "230ms" }}>
                 {h.titleLine2}
+              </span>
+              {" "}
+              <span className="enter-line hero-title-accent mt-3 block text-teal-light" style={{ animationDelay: "320ms" }}>
+                {h.titleAccent}
               </span>
             </h1>
             <p className="enter mt-6 max-w-[29rem] hero-lead text-[1.0625rem] font-medium leading-[1.6] text-white sm:text-[1.125rem]" style={{ animationDelay: "320ms" }}>
@@ -71,6 +74,7 @@ export default function Hero({ t }: { t: Dictionary }) {
                 <span aria-hidden="true" className="h-10 w-px shrink-0 bg-white/25 transition-colors duration-300 group-hover:bg-teal-light" />
                 <span className="text-[0.9375rem] leading-[1.35] text-white/90 transition-colors duration-300 group-hover:text-white">
                   <span className="block">{h.services[index].lines[0]}</span>
+                  {" "}
                   <span className="block">{h.services[index].lines[1]}</span>
                 </span>
                 <ArrowRight

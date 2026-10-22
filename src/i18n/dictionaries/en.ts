@@ -2,9 +2,9 @@ import type { Dictionary } from "../types";
 
 const en: Dictionary = {
   meta: {
-    title: "ANAMI | Office & Commercial Space for Rent in Belgrade",
+    title: "Office & Commercial Space for Rent in Belgrade | ANAMI",
     description:
-      "ANAMI, based in Zemun, rents out offices and commercial space in Belgrade, adapts and reconstructs buildings, and maintains them for tenants.",
+      "ANAMI, based in Zemun, rents out offices, commercial and warehouse space in Belgrade, adapts and reconstructs buildings, and maintains them for tenants.",
     ogAlt: "Contemporary office lobby with an arched opening and an olive tree — ANAMI",
     keywords: [
       "ANAMI",
@@ -13,6 +13,7 @@ const en: Dictionary = {
       "office space for rent Belgrade",
       "commercial property leasing Serbia",
       "office space for rent Zemun",
+      "warehouse space Belgrade",
       "commercial real estate Belgrade",
       "property management Belgrade",
       "facility maintenance Serbia",
@@ -39,10 +40,10 @@ const en: Dictionary = {
     contact: "Contact",
   },
   hero: {
-    kicker: "Commercial space in Belgrade",
-    titleBrand: "ANAMI builds",
-    titleLine1: "space for",
-    titleLine2: "the future.",
+    kicker: "Offices · Commercial space · Warehouses",
+    titleLine1: "Commercial space",
+    titleLine2: "in Belgrade",
+    titleAccent: "built, leased and maintained by ANAMI.",
     lead: "We rent out office and commercial space in Belgrade. Before you move in, we fit it out for you. After you move in, we look after the building so you don't have to.",
     cta: "Meet ANAMI",
     backgroundAlt: "Spacious office lobby with a reception desk, an arched opening and a potted olive tree",
@@ -56,15 +57,15 @@ const en: Dictionary = {
   about: {
     kicker: "About ANAMI",
     outlineWord: "Space",
-    titleLine1: "Partner",
-    titleLine2Plain: "in your",
-    titleLine2Accent: "growth.",
+    titleLine1: "One partner",
+    titleLine2Plain: "for the whole",
+    titleLine2Accent: "space.",
     primary: [
-      "ANAMI is a Belgrade company with its office in Zemun. We handle commercial space from start to finish: we build or renovate it, rent it out, and look after it while it's in use.",
-      "Most of our work is leasing. We rent out our own buildings and also offer space owned by others, so if you're looking for an office we can show you more than one building.",
+      "ANAMI is a company from Zemun that handles commercial space in Belgrade from start to finish: we build or renovate it, rent it out, and look after it while it's in use.",
+      "Most of our work is leasing space in buildings we own. We rent out offices, commercial and warehouse space, and agree lease terms and the interior with each tenant separately.",
     ],
     secondary: [
-      "The other part of the work is construction. We adapt and reconstruct existing commercial buildings and put up new ones. Every design starts with who will work in the space and how, not with a ready-made floor plan.",
+      "The other part of the work is construction. We adapt and reconstruct commercial buildings, our own and for other owners, and put up new ones. Every design starts with who will work in the space and how, not with a ready-made floor plan.",
       "Once a tenant moves in, the building stays our job. Technical maintenance, building systems, logistics and tenant communication all go through us, so tenants call us instead of hunting for a contractor.",
       "We want tenants to think about the space as little as possible and spend their time on their own work.",
     ],
@@ -78,13 +79,13 @@ const en: Dictionary = {
   },
   transformation: {
     kicker: "Development & reconstruction",
-    titleLine1: "From idea",
-    titleLine2: "to move-in.",
-    lead: "We usually take a space over as bare concrete. Before move-in it goes through design, adaptation and interior fit-out, and we hand it over ready for work.",
+    titleLine1: "From bare concrete",
+    titleLine2: "to a finished space.",
+    lead: "We take commercial space over as a bare shell or as a building that needs reconstruction. Before move-in it goes through design, adaptation and interior fit-out, and we hand it to the tenant ready for work.",
     steps: [
-      { title: "Bare shell", text: "First we ask how many of you there are and how you work. Only then do we draw up the design." },
-      { title: "Fit-out & interior", text: "Reconstruction and interior work follow that design and the tenant's needs." },
-      { title: "Move-in", text: "You bring your things in and start working. Maintenance and technical support stay with us." },
+      { title: "Shell & design", text: "First we ask how many of you there are and how you work. Only then do we draw up the floor plan." },
+      { title: "Fit-out & interior", text: "Adaptation and interior work follow that design and the tenant's needs." },
+      { title: "Move-in", text: "You bring your things into a finished space and start working. Maintenance and technical support stay with us." },
     ],
     stepLabel: "Stage",
     cta: "Enquire about development or reconstruction",
@@ -92,33 +93,33 @@ const en: Dictionary = {
   },
   services: {
     kicker: "Our services",
-    titleLine1: "Complete",
-    titleLine2: "solutions.",
+    titleLine1: "What ANAMI does",
+    titleLine2: "for your space.",
     intro:
-      "You can come to us just to rent an office. We can also renovate or build a property for you, and take care of it afterwards.",
+      "You can simply rent an office, commercial or warehouse space from us. We can also renovate or build a property for you, and take care of it afterwards.",
     detailsLabel: "What it includes",
     items: {
       development: {
-        title: "Real Estate Development & Reconstruction",
-        short: "Adaptation and reconstruction of existing buildings and construction of new ones, to a design based on your requirements.",
-        long: "We work on existing buildings and new ones. With a reconstruction, we first look at what the building already has and what it lacks for the work that will happen there. With new construction, the design starts from the people who will use it. Either way, we build to current construction standards.",
+        title: "Commercial Building Development & Reconstruction",
+        short: "Adaptation and reconstruction of existing commercial buildings and construction of new ones, to a design based on your requirements.",
+        long: "We reconstruct existing commercial buildings and build new ones. With a reconstruction, we first look at what the building already has and what it lacks for the work that will happen there. With new construction, the design starts from the people who will use it. Either way, we build to current construction standards.",
         points: [
           "Design based on the occupier's requirements",
           "Adaptation and reconstruction of existing buildings",
           "Construction of new commercial buildings",
           "Building to current construction standards",
         ],
-        imageAlt: "Brick office building facade with large windows and an entrance canopy",
+        imageAlt: "Office floor under reconstruction: bare concrete ceiling, new building services, columns and a row of windows",
         cta: "What development includes",
         contactCta: "Enquire about development or reconstruction",
       },
       leasing: {
-        title: "Commercial Leasing & Space Solutions",
-        short: "Offices and commercial space in our own buildings and in buildings owned by others, with lease terms and fit-out agreed with you.",
-        long: "We offer space in our own buildings and in properties owned by others. Lease terms depend on how much space you need and for how long, and we adapt the interior to your team before you move in.",
+        title: "Commercial Space for Rent in Belgrade",
+        short: "Offices, commercial and warehouse space in buildings we own, with lease terms and fit-out agreed with you.",
+        long: "We rent out space in buildings we own. Lease terms, from floor area to contract length, depend on how much space you need and for how long, and we fit out the interior for your team before you move in.",
         points: [
+          "Office, commercial and warehouse space",
           "Space in our own buildings",
-          "Space in third-party buildings",
           "Lease terms agreed case by case",
           "Interior adapted to the tenant before move-in",
         ],
@@ -129,7 +130,7 @@ const en: Dictionary = {
       management: {
         title: "Property & Facility Management",
         short: "Technical and infrastructure maintenance, logistics and tenant support, all through one contact.",
-        long: "We maintain the buildings we manage ourselves, from building systems to infrastructure. Tenants have one contact for anything to do with the building and don't need to find contractors on their own.",
+        long: "Our own team maintains the commercial buildings we manage, from building systems to infrastructure. Tenants have one contact person for anything to do with the building and don't need to find and hire contractors on their own.",
         points: [
           "Technical and infrastructure maintenance",
           "Logistical support for tenants",
@@ -153,11 +154,11 @@ const en: Dictionary = {
   },
   contact: {
     kicker: "Contact",
-    titleLine1: "Space for your",
-    titleLine2: "next step.",
-    lead: "Looking for an office, have a building that needs reconstruction, or need someone to maintain one? Tell us what you need and we'll get back to you.",
+    titleLine1: "Get in touch",
+    titleLine2: "with ANAMI.",
+    lead: "Looking for an office, commercial space or a warehouse, have a building that needs reconstruction, or need someone to maintain one? Tell us what you need and we'll get back to you.",
     form: {
-      title: "Send an enquiry",
+      title: "Send an enquiry about commercial space",
       name: "Full name",
       namePlaceholder: "Your full name",
       email: "Email address",
@@ -185,7 +186,7 @@ const en: Dictionary = {
       },
     },
     info: {
-      title: "Company details",
+      title: "ANAMI company details",
       address: "Address",
       addressLines: ["Cara Dušana 266,", "11080 Belgrade (Zemun),", "Serbia"],
       email: "Email",

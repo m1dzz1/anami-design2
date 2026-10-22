@@ -48,7 +48,8 @@ export const images = {
   // Detail from the stair landing above the reception — banana plant against polished plaster
   aboutNature: { src: "/images/anami-plant-detail.webp", width: 1100, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoLAAwAA4BaJQBOgBuG5IsOgADyRG3k8oZmN6NqyoyByDdA7O98M0HGqaGmGZA+sEmixQtPivKFSGjT8AmWUAAA" },
   aboutInterior: { src: "/images/anami-office-open.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAQCdASoMAAkAA4BaJZQAAmaq0oAA+FGFEF0xqg3EwufdH5Ec9ji0kwyc191XlaatZ3Dldx1JY/iXTmG/dCnNZl+gQAAA" },
-  serviceDevelopment: { src: "/images/anami-building-facade.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoMAAkAA4BaJYgCdADbARHgAP4moINxYiAdeQiaYaof14df+FSHg09aOkfBn9oKMAQ9XzjISot3coAA" },
+  // Office floor mid-reconstruction: bare concrete ceiling, new services, floor boxes cut in
+  serviceDevelopment: { src: "/images/anami-office-reconstruction.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoMAAkAAsBMJZwCdAEYGnysFAAA/u9oex9mmSB+vpIkROqOXns+WhaPM4yHohVlmtKXiXVJ8dbH+Ja9kAA=" },
   serviceLeasing: { src: "/images/anami-office-terrace.webp", width: 1600, height: 1200, blur: "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoMAAkAA4BaJZQAAxPwpDfmjTAA/fBfGPwloxoGqW4Bp8DQWdOeIpR0KmkQIQkiyYnW2xziefwueKDiRN8P4gAA" },
   serviceManagement: { src: "/images/anami-corridor.webp", width: 1448, height: 1086, blur: "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoMAAkAA4BaJQBdgCPQTa9wsoAA/PYDpS+wTpfWQoYWi+caoeM04usFuBFKEVM8B7No4YoVpo75h7MkLMoAAA==" },
   // Static preview rendered from OpenStreetMap tiles (© OpenStreetMap contributors, ODbL) — centred on site.map

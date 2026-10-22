@@ -34,7 +34,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         image: `${site.url}${ogImage.src}`,
         email: site.email,
         description: t.meta.description,
-        slogan: `${t.hero.titleBrand} ${t.hero.titleLine1} ${t.hero.titleLine2}`,
+        slogan: t.about.statement.join(" "),
         keywords: t.meta.keywords.join(", "),
         knowsAbout: serviceKeys.map((key) => t.services.items[key].title),
         taxID: site.pib,

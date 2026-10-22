@@ -24,6 +24,7 @@ export default function Footer({ lang, t }: { lang: Locale; t: Dictionary }) {
             </a>
             <p className="text-[0.875rem] leading-[1.45] text-white/70">
               <span className="block">{t.footer.tagline[0]}</span>
+              {" "}
               <span className="block">{t.footer.tagline[1]}</span>
             </p>
           </div>

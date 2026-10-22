@@ -336,6 +336,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
             </p>
             <h2 id="transformation-title" className="display mt-4 text-[clamp(2.5rem,11vw,3.6rem)] text-white md:text-[clamp(3.6rem,5.6vw,5.8rem)]">
               <span className="block">{tr.titleLine1}</span>
+              {" "}
               <span className="block text-teal-light">{tr.titleLine2}</span>
             </h2>
             <p className="tr-static mt-5 text-[1.0625rem] leading-[1.6] text-white/88">{tr.lead}</p>
@@ -355,6 +356,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
                   <span aria-hidden="true" className="tr-static mb-1 font-display text-[1.4rem] font-semibold uppercase text-teal-light">
                     0{index + 1} {step.title}
                   </span>
+                  {" "}
                   <span className="block max-w-[26rem] text-[0.9844rem] leading-[1.6] text-white/88 md:text-[1.0625rem]">
                     {step.text}
                   </span>
@@ -389,6 +391,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
           {steps.map((step, index) => (
             <li key={step.title} data-active={index === stage} data-done={index < stage} className="tr-rail-item">
               <span className="display text-[1.5rem] font-medium leading-none">0{index + 1}</span>
+              {" "}
               <span className="mt-1.5 block text-[0.6875rem] font-bold uppercase tracking-[0.16em]">{step.title}</span>
             </li>
           ))}

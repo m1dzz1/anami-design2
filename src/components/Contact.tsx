@@ -55,6 +55,7 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
       body: (
         <>
           <span className="block">{c.info.bank}</span>
+          {" "}
           <span className="block whitespace-nowrap font-medium tabular-nums text-white">{site.bankAccount}</span>
         </>
       ),
@@ -78,6 +79,7 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
               <p className="kicker text-teal-light">{c.kicker}</p>
               <h2 id="contact-title" className="display display-lg mt-6 text-white">
                 <span className="block">{c.titleLine1}</span>
+                {" "}
                 <span className="block text-teal-light">{c.titleLine2}</span>
               </h2>
               <span aria-hidden="true" className="rule mt-7 text-teal-light/70" />

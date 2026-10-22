@@ -59,6 +59,7 @@ export default function About({ t }: { t: Dictionary }) {
           <p className="kicker text-teal-light">{a.kicker}</p>
           <h2 id="about-title" className="display display-lg mt-6 text-white">
             <span className="block">{a.titleLine1}</span>
+            {" "}
             <span className="block">
               {a.titleLine2Plain} <span className="text-teal-light">{a.titleLine2Accent}</span>
             </span>
