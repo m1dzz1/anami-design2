@@ -2,12 +2,15 @@ const sr = {
   meta: {
     title: "Poslovni prostori u Beogradu – zakup i rekonstrukcija | ANAMI",
     description:
-      "ANAMI iz Zemuna izdaje kancelarije, poslovni i magacinski prostor u Beogradu, radi adaptacije i rekonstrukcije objekata i održava zgrade za zakupce.",
+      "Poslovni prostori u Beogradu: ANAMI iz Zemuna izdaje kancelarije, poslovni i magacinski prostor u svojim objektima, radi rekonstrukcije i održava zgrade.",
     ogAlt: "Lobi savremenog poslovnog prostora sa lučnim otvorom i maslinom — ANAMI",
     keywords: [
       "ANAMI",
       "ANAMI Beograd",
       "ANAMI poslovni prostor",
+      "poslovni prostori Beograd",
+      "poslovni prostori u Beogradu",
+      "poslovni prostori za izdavanje Beograd",
       "poslovni prostor Beograd",
       "izdavanje poslovnog prostora Beograd",
       "zakup poslovnog prostora Beograd",
@@ -100,7 +103,7 @@ const sr = {
     titleLine1: "Šta ANAMI radi",
     titleLine2: "za vaš prostor.",
     intro:
-      "Kod nas možete jednostavno da zakupite kancelariju, poslovni ili magacinski prostor. Možemo i da obnovimo ili izgradimo objekat za vas, i da posle vodimo računa o njemu.",
+      "Kod nas možete jednostavno da zakupite kancelariju, poslovni ili magacinski prostor u Beogradu. Možemo i da obnovimo ili izgradimo objekat za vas, i da posle vodimo računa o njemu.",
     detailsLabel: "Šta obuhvata",
     items: {
       development: {
@@ -208,7 +211,7 @@ const sr = {
     },
   },
   footer: {
-    tagline: ["Poslovni prostor u Beogradu,", "od gradnje do održavanja."],
+    tagline: ["Poslovni prostori u Beogradu,", "od gradnje do održavanja."],
     rights: "Sva prava zadržana.",
   },
 };

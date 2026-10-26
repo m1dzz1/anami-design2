@@ -1,6 +1,6 @@
 import { locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { mapsLinkUrl, site, type ServiceKey } from "@/content/site";
+import { mapsLinkUrl, sectionIds, site, type ServiceKey } from "@/content/site";
 
 // Plain-language company summary for AI assistants and answer engines (https://llmstxt.org)
 export const dynamic = "force-static";
@@ -17,7 +17,15 @@ export function GET() {
     "",
     `> ${en.meta.description}`,
     "",
-    `${site.name} (${site.url}) is a Belgrade-based company that develops, reconstructs, leases and manages contemporary commercial and office spaces, and provides tenants with complete technical and logistical support.`,
+    `${site.name} (${site.url}) is a company from ${district}, Belgrade (Serbia) that leases office, commercial and warehouse space in Belgrade in buildings it owns. It also adapts, reconstructs and builds commercial buildings (its own and for other owners), and maintains the buildings it manages for tenants.`,
+    "",
+    "## Key facts",
+    `- ${site.name} leases only space in buildings it owns: offices, commercial space and warehouse space in Belgrade.`,
+    "- Lease terms (floor area, contract length) are agreed with each tenant; the interior is fitted out for the tenant before move-in.",
+    "- Space can be taken over as a grey shell or as a building for reconstruction, then goes through design, adaptation and interior fit-out.",
+    "- Reconstruction and new construction of commercial buildings, built to current construction standards.",
+    "- Technical and infrastructure maintenance, logistics and tenant support through a single point of contact.",
+    `- Enquiries: ${site.email}, ${site.phone.display} or the contact form at ${site.url}/sr#${sectionIds.contact} (Serbian) / ${site.url}/en#${sectionIds.contact} (English).`,
     "",
     "## Services",
     ...serviceKeys.map((key) => `- **${en.services.items[key].title}** — ${en.services.items[key].long}`),
@@ -37,8 +45,10 @@ export function GET() {
       return `- [${t.meta.title}](${site.url}/${lang}): ${t.meta.description}`;
     }),
     "",
-    "## Opis na srpskom",
+    "## Poslovni prostori u Beogradu (srpski)",
     sr.meta.description,
+    "",
+    `${site.name} izdaje poslovne prostore u Beogradu isključivo u objektima koje poseduje: kancelarije, poslovni i magacinski prostor. Rekonstrukcije radi za svoje objekte i za druge vlasnike. Kontakt: ${site.email}, ${site.phone.display}.`,
     "",
     ...serviceKeys.map((key) => `- **${sr.services.items[key].title}** — ${sr.services.items[key].long}`),
     "",
