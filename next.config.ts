@@ -22,8 +22,8 @@ const nextConfig: NextConfig = {
         destination: "https://anami.rs/:path*",
         permanent: true,
       },
-      // Serbian is the default language
-      { source: "/", destination: "/sr", permanent: false },
+      // Serbian is the default language; permanent so Google consolidates the bare domain onto /sr
+      { source: "/", destination: "/sr", permanent: true },
     ];
   },
   async headers() {
