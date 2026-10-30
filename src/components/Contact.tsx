@@ -95,7 +95,11 @@ export default function Contact({ lang, t }: { lang: Locale; t: Dictionary }) {
                 <span className="block text-teal-light">{c.titleLine2}</span>
               </h2>
               <span aria-hidden="true" className="rule mt-7 text-teal-light/70" />
-              <p className="mt-6 max-w-[30rem] text-[1.0625rem] leading-[1.6] text-white/88">{c.lead}</p>
+              <div className="mt-6 max-w-[30rem] space-y-4 text-[1.0625rem] leading-[1.6] text-white/88">
+                {c.lead.map((text) => (
+                  <p key={text}>{text}</p>
+                ))}
+              </div>
             </div>
 
             <div data-reveal-text className="mt-12">

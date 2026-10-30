@@ -33,7 +33,7 @@ export default function Hero({ t }: { t: Dictionary }) {
             <p className="enter kicker text-teal-light" style={{ animationDelay: "80ms" }}>
               {h.kicker}
             </p>
-            {/* One sentence for search engines, set as a two-line statement plus a smaller accent line */}
+            {/* One sentence for search engines, set as three lines with the last one in the accent colour */}
             <h1 id="hero-title" className="display hero-title mt-6 text-white">
               <span className="enter-line block" style={{ animationDelay: "140ms" }}>
                 {h.titleLine1}
@@ -43,7 +43,7 @@ export default function Hero({ t }: { t: Dictionary }) {
                 {h.titleLine2}
               </span>
               {" "}
-              <span className="enter-line hero-title-accent mt-3 block text-teal-light" style={{ animationDelay: "320ms" }}>
+              <span className="enter-line block text-teal-light" style={{ animationDelay: "320ms" }}>
                 {h.titleAccent}
               </span>
             </h1>

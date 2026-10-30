@@ -69,7 +69,9 @@ export default function About({ t }: { t: Dictionary }) {
               <p key={text}>{text}</p>
             ))}
           </div>
-          <AboutMore paragraphs={a.secondary} moreLabel={a.more} lessLabel={a.less} />
+          <AboutMore paragraphs={a.secondary} moreLabel={a.more} lessLabel={a.less}>
+            <p className="mt-7 font-display text-[1.35rem] font-semibold uppercase leading-[1.15] text-teal-light">{a.vision}</p>
+          </AboutMore>
           <p data-stagger className="mt-10 flex flex-wrap gap-x-5 gap-y-1 border-t border-white/15 pt-5 text-[0.875rem] text-white/75">
             {a.statement.map((line) => (
               <span key={line}>{line}</span>

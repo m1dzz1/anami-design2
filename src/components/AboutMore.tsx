@@ -1,17 +1,22 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
-/** "Više o nama" — reveals the remaining company description in place (content stays in the DOM for SEO). */
+/**
+ * "Više o nama" — reveals the remaining company description in place (content stays in the DOM for SEO).
+ * `children` are always visible, between the hidden paragraphs and the button.
+ */
 export default function AboutMore({
   paragraphs,
   moreLabel,
   lessLabel,
+  children,
 }: {
   paragraphs: string[];
   moreLabel: string;
   lessLabel: string;
+  children?: ReactNode;
 }) {
   const [expanded, setExpanded] = useState(false);
   const regionId = useId();
@@ -33,6 +38,7 @@ export default function AboutMore({
           </div>
         </div>
       </div>
+      {children}
       <button
         type="button"
         aria-expanded={expanded}

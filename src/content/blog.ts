@@ -73,7 +73,7 @@ export const posts: BlogPost[] = [
       { type: "h2", text: "Kako to radi ANAMI" },
       {
         type: "p",
-        text: "ANAMI izdaje kancelarije i poslovne prostore u Beogradu, u sopstvenim objektima i u objektima drugih vlasnika. Prostor najčešće preuzimamo u sivoj fazi, a raspored i enterijer radimo po meri zakupca pre nego što se useli. Uslove zakupa, od kvadrature do trajanja ugovora, dogovaramo sa svakim zakupcem posebno. Kad se zakupac useli, zgradu održava naš tim, a zakupac ima jedan kontakt za sva pitanja o zgradi.",
+        text: "ANAMI izdaje kancelarijski, poslovni i magacinski prostor u Beogradu, u objektima u svom vlasništvu. Prostor najčešće preuzimamo u sivoj fazi, a raspored i enterijer radimo po meri zakupca pre nego što se useli. Uslove zakupa, od kvadrature do trajanja ugovora, dogovaramo sa svakim zakupcem posebno. Kad se zakupac useli, zgradu održava naš tim, a zakupac ima jedan kontakt za sva pitanja o zgradi.",
       },
       {
         type: "p",

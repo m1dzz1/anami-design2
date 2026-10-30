@@ -333,7 +333,7 @@ export default function Transformation({ t }: { t: Dictionary }) {
           <div className="max-w-[min(38rem,48vw)] max-md:max-w-[31rem]">
             <p className="kicker text-teal-light">{tr.kicker}</p>
             <p aria-hidden="true" className="tr-motion-only mt-4 text-[0.75rem] font-bold uppercase tracking-[0.18em] text-teal-light">
-              0{stage + 1} <span className="text-white/50">/</span> {steps[stage].label ?? steps[stage].title}
+              0{stage + 1} <span className="text-white/50">/</span> {steps[stage].title}
             </p>
             <h2 id="transformation-title" className="display mt-4 text-[clamp(2.5rem,11vw,3.6rem)] text-white md:text-[clamp(3.6rem,5.6vw,5.8rem)]">
               <span className="block">{tr.titleLine1}</span>

@@ -7,7 +7,9 @@ import { sectionIds } from "@/content/site";
 
 type Service = {
   title: string;
+  shortLead: string;
   short: string;
+  longLead: string;
   long: string;
   points: string[];
   imageAlt: string;
@@ -68,7 +70,8 @@ export default function ServiceCard({
         <h3 id={titleId} className="font-display text-[1.6rem] font-semibold uppercase leading-[1.05] tracking-[0.01em]">
           {service.title}
         </h3>
-        <p className="mt-3 text-[0.9375rem] leading-[1.6] text-white/88">{service.short}</p>
+        {service.shortLead && <p className="mt-3 text-[0.9375rem] font-semibold leading-[1.5] text-white">{service.shortLead}</p>}
+        <p className={`${service.shortLead ? "mt-2" : "mt-3"} text-[0.9375rem] leading-[1.6] text-white/88`}>{service.short}</p>
         <button
           type="button"
           onClick={open}
@@ -103,7 +106,8 @@ export default function ServiceCard({
             <h3 id={dialogTitleId} className="display pr-10 text-[clamp(2.1rem,5vw,2.9rem)] text-ink">
               {service.title}
             </h3>
-            <p className="mt-5 text-[1rem] leading-[1.65] text-muted">{service.long}</p>
+            <p className="mt-5 text-[1.0625rem] font-semibold leading-[1.5] text-ink">{service.longLead}</p>
+            <p className="mt-3 text-[1rem] leading-[1.65] text-muted">{service.long}</p>
             <p className="kicker mt-8 text-teal-deep">{labels.details}</p>
             <ul className="mt-4 divide-y divide-mist-deep border-y border-mist-deep">
               {service.points.map((point) => (
