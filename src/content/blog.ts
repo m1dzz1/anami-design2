@@ -2,7 +2,8 @@
  * Blog posts (Serbian only). Linked from the footer, not from the main navigation.
  * A post is a list of blocks so the page can render headings and paragraphs without a Markdown parser.
  */
-export type BlogBlock = { type: "h2"; text: string } | { type: "p"; text: string };
+/** `link` turns the first occurrence of `link.text` inside the paragraph into a link (internal links with descriptive anchors). */
+export type BlogBlock = { type: "h2"; text: string } | { type: "p"; text: string; link?: { text: string; href: string } };
 
 export type BlogPost = {
   slug: string;
@@ -45,6 +46,7 @@ export const posts: BlogPost[] = [
       {
         type: "p",
         text: "Oglasi za poslovne prostore u Beogradu liče jedan na drugi: kvadratura, sprat, cena po kvadratu i fotografija praznog hodnika. Ono što odlučuje kako ćete u tom prostoru raditi narednih godina u oglasu skoro nikad ne piše. To saznate kad pitate, ili kad se prvi put nešto pokvari.",
+        link: { text: "poslovne prostore u Beogradu", href: "/sr" },
       },
       { type: "h2", text: "U kakvom stanju dobijate prostor" },
       {
@@ -74,6 +76,7 @@ export const posts: BlogPost[] = [
       {
         type: "p",
         text: "ANAMI izdaje kancelarijski, poslovni i magacinski prostor u Beogradu, u objektima u svom vlasništvu. Prostor najčešće preuzimamo u sivoj fazi, a raspored i enterijer radimo po meri zakupca pre nego što se useli. Uslove zakupa, od kvadrature do trajanja ugovora, dogovaramo sa svakim zakupcem posebno. Kad se zakupac useli, zgradu održava naš tim, a zakupac ima jedan kontakt za sva pitanja o zgradi.",
+        link: { text: "Uslove zakupa", href: "/sr#service-leasing" },
       },
       {
         type: "p",

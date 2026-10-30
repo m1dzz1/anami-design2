@@ -25,11 +25,14 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        // Also a LocalBusiness: a Belgrade address, map and coordinates make it eligible for local results
+        "@type": ["Organization", "LocalBusiness"],
         "@id": orgId,
         name: site.name,
         alternateName: "Anami",
         url: site.url,
+        hasMap: mapsLinkUrl,
+        geo: { "@type": "GeoCoordinates", latitude: site.map.lat, longitude: site.map.lng },
         logo: { "@type": "ImageObject", url: `${site.url}/icon-512.png`, width: 512, height: 512 },
         image: `${site.url}${ogImage.src}`,
         email: site.email,

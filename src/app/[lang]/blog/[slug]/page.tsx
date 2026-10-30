@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ogImage, sectionIds, site } from "@/content/site";
-import { blog, blogPath, formatDate, getPost, posts } from "@/content/blog";
+import { blog, blogPath, formatDate, getPost, posts, type BlogBlock } from "@/content/blog";
 import BlogShell from "@/components/BlogShell";
 
 // Serbian only, like the blog index
@@ -11,6 +11,20 @@ export function generateStaticParams() {
 }
 
 export const dynamicParams = false;
+
+function Paragraph({ block }: { block: Extract<BlogBlock, { type: "p" }> }) {
+  const at = block.link ? block.text.indexOf(block.link.text) : -1;
+  if (!block.link || at < 0) return block.text;
+  return (
+    <>
+      {block.text.slice(0, at)}
+      <a href={block.link.href} className="font-medium text-teal-deep underline decoration-teal-deep/40 underline-offset-4 hover:decoration-teal-deep">
+        {block.link.text}
+      </a>
+      {block.text.slice(at + block.link.text.length)}
+    </>
+  );
+}
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -92,7 +106,7 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
                 </h2>
               ) : (
                 <p key={index} className="mt-5 first:mt-0">
-                  {block.text}
+                  <Paragraph block={block} />
                 </p>
               ),
             )}

@@ -30,12 +30,16 @@ export default function Hero({ t }: { t: Dictionary }) {
       <div className="container-x relative flex flex-1 flex-col pt-[calc(var(--nav-h)+clamp(3rem,9vh,6rem))]">
         <div className="flex flex-1 items-center pb-10 lg:pb-14">
           <div className="max-w-[48rem]">
-            <p className="enter kicker text-teal-light" style={{ animationDelay: "80ms" }}>
-              {h.kicker}
-            </p>
-            {/* One sentence for search engines, set as three lines with the last one in the accent colour */}
-            <h1 id="hero-title" className="display hero-title mt-6 text-white">
-              <span className="enter-line block" style={{ animationDelay: "140ms" }}>
+            {/* The kicker ("Poslovni prostori u Beogradu") is part of the H1 so the heading carries the target keyword;
+                visually it stays the small label above the three-line statement */}
+            <h1 id="hero-title" className="display hero-title text-white">
+              <span className="block">
+                <span className="enter kicker leading-normal text-teal-light" style={{ animationDelay: "80ms" }}>
+                  {h.kicker}
+                </span>
+              </span>
+              {" "}
+              <span className="enter-line mt-6 block" style={{ animationDelay: "140ms" }}>
                 {h.titleLine1}
               </span>
               {" "}
