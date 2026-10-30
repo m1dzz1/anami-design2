@@ -90,7 +90,8 @@ const sr = {
     titleLine2: "do gotovog poslovnog prostora.",
     lead: "Poslovni prostor najčešće preuzimamo u sivoj fazi. Do useljenja prolazi kroz projekat, adaptaciju i opremanje enterijera, a predajemo ga spremnog za rad.",
     steps: [
-      { title: "Sirov prostor i projekat", text: "Prvo pitamo koliko vas ima i kako radite, pa tek onda crtamo raspored poslovnog prostora." },
+      // `label` is the shorter name in the "01 / …" line above the heading; steps without one show their title there
+      { title: "Sirov prostor i projekat", label: "Sirov prostor", text: "Prvo pitamo koliko vas ima i kako radite, pa tek onda crtamo raspored poslovnog prostora." },
       { title: "Adaptacija i enterijer po meri", text: "Adaptaciju poslovnog prostora i enterijer radimo po tom projektu, prema potrebama zakupca." },
       { title: "Useljenje u poslovni prostor", text: "Unosite stvari u gotov prostor i počinjete da radite. Održavanje i tehnička podrška ostaju na nama." },
     ],
