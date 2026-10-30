@@ -1,6 +1,7 @@
 import { locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { mapsLinkUrl, sectionIds, site, type ServiceKey } from "@/content/site";
+import { blogPath, posts } from "@/content/blog";
 
 // Plain-language company summary for AI assistants and answer engines (https://llmstxt.org)
 export const dynamic = "force-static";
@@ -44,6 +45,7 @@ export function GET() {
       const t = getDictionary(lang);
       return `- [${t.meta.title}](${site.url}/${lang}): ${t.meta.description}`;
     }),
+    ...posts.map((post) => `- [${post.title}](${site.url}${blogPath(post.slug)}) (blog, Serbian): ${post.description}`),
     "",
     "## Poslovni prostori u Beogradu (srpski)",
     sr.meta.description,

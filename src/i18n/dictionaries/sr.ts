@@ -1,8 +1,8 @@
 const sr = {
   meta: {
-    title: "Poslovni prostori u Beogradu – zakup i rekonstrukcija | ANAMI",
+    title: "ANAMI | Poslovni prostori u Beogradu – zakup, gradnja i održavanje",
     description:
-      "Poslovni prostori u Beogradu: ANAMI iz Zemuna izdaje kancelarije, poslovni i magacinski prostor u svojim objektima, radi rekonstrukcije i održava zgrade.",
+      "ANAMI iz Zemuna izdaje poslovne prostore i kancelarije u Beogradu, radi adaptacije i rekonstrukcije i održava zgrade za zakupce.",
     ogAlt: "Lobi savremenog poslovnog prostora sa lučnim otvorom i maslinom — ANAMI",
     keywords: [
       "ANAMI",
@@ -47,11 +47,11 @@ const sr = {
     contact: "Kontakt",
   },
   hero: {
-    kicker: "Kancelarije · Poslovni prostor · Magacini",
+    kicker: "Poslovni prostori u Beogradu",
     titleLine1: "Poslovni prostori",
     titleLine2: "u Beogradu",
     titleAccent: "koje ANAMI gradi, izdaje i održava.",
-    lead: "Izdajemo poslovni i kancelarijski prostor u Beogradu. Pre useljenja ga uređujemo po meri zakupca, a posle useljenja održavamo zgradu, da vi ne biste morali.",
+    lead: "ANAMI izdaje poslovni i kancelarijski prostor u Beogradu. Pre useljenja ga uređujemo po meri zakupca, a posle useljenja održavamo zgradu, da vi ne biste morali.",
     cta: "Upoznajte ANAMI",
     backgroundAlt: "Prostran poslovni lobi sa recepcijom, lučnim otvorom i maslinom u žardinjeri",
     services: [
@@ -64,17 +64,17 @@ const sr = {
   about: {
     kicker: "O kompaniji ANAMI",
     outlineWord: "Prostor",
-    titleLine1: "Jedan partner",
+    titleLine1: "ANAMI, jedan partner",
     titleLine2Plain: "za ceo",
     titleLine2Accent: "poslovni prostor.",
     primary: [
-      "ANAMI je kompanija iz Zemuna koja se bavi poslovnim prostorima u Beogradu od početka do kraja: gradimo ih ili obnavljamo, izdajemo ih i brinemo o njima dok su u upotrebi.",
-      "Najveći deo našeg posla je zakup poslovnog prostora u objektima koje posedujemo. Izdajemo kancelarije, poslovni i magacinski prostor, a uslove zakupa i enterijer dogovaramo sa svakim zakupcem posebno.",
+      "ANAMI je kompanija iz Zemuna koja se bavi poslovnim prostorima u Beogradu. Bavimo se poslovnim prostorom od početka do kraja: gradimo ga ili obnavljamo, izdajemo ga i brinemo o njemu dok je u upotrebi.",
+      "Najveći deo našeg posla je zakup poslovnog prostora. Izdajemo sopstvene objekte, pa onome ko traži kancelariju možemo da pokažemo više od jedne zgrade.",
     ],
     secondary: [
-      "Drugi deo posla je gradnja. Radimo adaptacije i rekonstrukcije poslovnih objekata, svojih i za druge vlasnike, i gradimo nove. Projekat uvek počinje od toga ko će u prostoru raditi i kako, a ne od gotovog rasporeda.",
-      "Kad se zakupac useli, zgrada ostaje naša briga. Tehničko održavanje, instalacije, logistika i komunikacija sa zakupcima idu preko nas, pa zakupac ne traži majstora, nego se javi nama.",
-      "Želimo da zakupci o prostoru misle što manje i da vreme troše na svoj posao.",
+      "Drugi deo posla je gradnja poslovnih objekata. Radimo adaptacije i rekonstrukcije postojećih poslovnih objekata i gradimo nove. Projekat uvek počinje od toga ko će u prostoru raditi i kako, a ne od gotovog rasporeda.",
+      "Kad se zakupac useli u poslovni prostor, zgrada ostaje naša briga. Tehničko održavanje, instalacije, logistika i komunikacija sa zakupcima idu preko nas, pa zakupac ne traži majstora nego se javi nama.",
+      "Želimo da zakupci o svom poslovnom prostoru misle što manje i da vreme troše na posao.",
     ],
     more: "Više o nama",
     less: "Prikaži manje",
@@ -85,14 +85,14 @@ const sr = {
     imageInteriorAlt: "Recepcija poslovnog prostora sa lučnim prozorom, maslinom i crvenom stolicom",
   },
   transformation: {
-    kicker: "Razvoj i rekonstrukcija",
+    kicker: "Od ideje do useljenja",
     titleLine1: "Od golog betona",
-    titleLine2: "do gotovog prostora.",
-    lead: "Poslovni prostor preuzimamo u sivoj fazi ili kao objekat za rekonstrukciju. Do useljenja prolazi kroz projekat, adaptaciju i opremanje enterijera, a zakupcu ga predajemo spremnog za rad.",
+    titleLine2: "do gotovog poslovnog prostora.",
+    lead: "Poslovni prostor najčešće preuzimamo u sivoj fazi. Do useljenja prolazi kroz projekat, adaptaciju i opremanje enterijera, a predajemo ga spremnog za rad.",
     steps: [
-      { title: "Siva faza i projekat", text: "Prvo pitamo koliko vas ima i kako radite, pa tek onda crtamo raspored prostora." },
-      { title: "Adaptacija i enterijer", text: "Adaptaciju i enterijer radimo po tom projektu, prema potrebama zakupca." },
-      { title: "Useljenje", text: "Unosite stvari u gotov prostor i počinjete da radite. Održavanje i tehnička podrška ostaju na nama." },
+      { title: "Sirov prostor i projekat", text: "Prvo pitamo koliko vas ima i kako radite, pa tek onda crtamo raspored poslovnog prostora." },
+      { title: "Adaptacija i enterijer po meri", text: "Adaptaciju poslovnog prostora i enterijer radimo po tom projektu, prema potrebama zakupca." },
+      { title: "Useljenje u poslovni prostor", text: "Unosite stvari u gotov prostor i počinjete da radite. Održavanje i tehnička podrška ostaju na nama." },
     ],
     stepLabel: "Faza",
     cta: "Pošaljite upit za razvoj ili rekonstrukciju",
@@ -101,15 +101,15 @@ const sr = {
   services: {
     kicker: "Naše usluge",
     titleLine1: "Šta ANAMI radi",
-    titleLine2: "za vaš prostor.",
+    titleLine2: "za vaš poslovni prostor.",
     intro:
-      "Kod nas možete jednostavno da zakupite kancelariju, poslovni ili magacinski prostor u Beogradu. Možemo i da obnovimo ili izgradimo objekat za vas, i da posle vodimo računa o njemu.",
+      "Kod nas možete jednostavno da zakupite kancelariju ili poslovni prostor. Možemo i da obnovimo ili izgradimo objekat za vas, i da posle vodimo računa o njemu.",
     detailsLabel: "Šta obuhvata",
     items: {
       development: {
         title: "Razvoj i rekonstrukcija poslovnih objekata",
         short: "Adaptacija i rekonstrukcija postojećih poslovnih objekata i izgradnja novih, po projektu koji pravimo prema vašim zahtevima.",
-        long: "Radimo rekonstrukcije postojećih poslovnih zgrada i gradimo nove. Kod rekonstrukcije prvo gledamo šta objekat već ima, a šta mu fali za posao koji će se u njemu odvijati. Kod nove gradnje projekat polazi od budućih korisnika. U oba slučaja gradimo po važećim građevinskim standardima.",
+        long: "ANAMI radi i rekonstrukcije postojećih poslovnih zgrada i gradnju novih. Kod rekonstrukcije prvo gledamo šta objekat već ima, a šta mu fali za posao koji će se u njemu odvijati. Kod nove gradnje projekat polazi od budućih korisnika. U oba slučaja gradimo po važećim građevinskim standardima.",
         points: [
           "Projekat prema zahtevima korisnika",
           "Adaptacija i rekonstrukcija postojećih objekata",
@@ -122,10 +122,9 @@ const sr = {
       },
       leasing: {
         title: "Zakup poslovnog prostora u Beogradu",
-        short: "Kancelarije, poslovni i magacinski prostor u objektima u našem vlasništvu, sa uslovima zakupa i enterijerom po dogovoru.",
-        long: "Izdajemo prostor u objektima koje posedujemo. Uslove zakupa, od kvadrature do trajanja ugovora, dogovaramo prema tome koliko vam prostora treba i na koliko dugo, a enterijer uređujemo po meri vašeg tima pre nego što se uselite.",
+        short: "Kancelarije i poslovni prostori u našim objektima, sa uslovima zakupa i enterijerom po dogovoru.",
+        long: "U ponudi imamo poslovne prostore u sopstvenim objektima. Uslove zakupa dogovaramo prema tome koliko vam prostora treba i na koliko dugo, a enterijer prilagođavamo vašem timu pre nego što se uselite.",
         points: [
-          "Kancelarijski, poslovni i magacinski prostor",
           "Prostor u sopstvenim objektima",
           "Uslovi zakupa po dogovoru",
           "Enterijer prilagođen zakupcu pre useljenja",
@@ -137,7 +136,7 @@ const sr = {
       management: {
         title: "Upravljanje i održavanje poslovnih objekata",
         short: "Tehničko i infrastrukturno održavanje poslovnog objekta, logistika i podrška zakupcima, sve preko jednog kontakta.",
-        long: "Poslovne objekte kojima upravljamo održava naš tim, od instalacija do infrastrukture zgrade. Zakupac ima jednu kontakt osobu za sve što se tiče zgrade i ne mora sam da traži i ugovara izvođače.",
+        long: "Poslovne objekte kojima upravljamo održava naš tim, od instalacija do infrastrukture zgrade. Zakupac ima jedan kontakt za sve što se tiče zgrade i ne mora sam da traži izvođače.",
         points: [
           "Tehničko i infrastrukturno održavanje objekata",
           "Logistička podrška zakupcima",
@@ -162,8 +161,8 @@ const sr = {
   contact: {
     kicker: "Kontakt",
     titleLine1: "Javite se",
-    titleLine2: "ANAMI timu.",
-    lead: "Tražite kancelariju, poslovni prostor ili magacin, imate objekat za rekonstrukciju ili vam treba neko da održava zgradu? Napišite nam šta vam treba i javićemo vam se.",
+    titleLine2: "ANAMI timu za poslovni prostor.",
+    lead: "Tražite kancelariju ili poslovni prostor, imate objekat za rekonstrukciju ili vam treba neko da održava zgradu? Napišite nam šta vam treba i javićemo vam se.",
     form: {
       title: "Pošaljite upit za poslovni prostor",
       name: "Ime i prezime",
@@ -211,7 +210,7 @@ const sr = {
     },
   },
   footer: {
-    tagline: ["Poslovni prostori u Beogradu,", "od gradnje do održavanja."],
+    tagline: ["Poslovni prostor u Beogradu,", "od gradnje do održavanja."],
     rights: "Sva prava zadržana.",
   },
 };
