@@ -62,7 +62,7 @@ const en: Dictionary = {
     titleLine2Accent: "space.",
     primary: [
       "ANAMI is a company from Zemun that handles commercial space in Belgrade from start to finish: we build or renovate it, rent it out, and look after it while it's in use.",
-      "Most of our work is leasing space in buildings we own. We rent out offices, commercial and warehouse space, and agree lease terms and the interior with each tenant separately.",
+      "Most of our work is leasing commercial space. We rent out our own buildings and also offer space in buildings of other owners, so anyone looking for an office can see more than one building.",
     ],
     secondary: [
       "The other part of the work is construction. We adapt and reconstruct commercial buildings, our own and for other owners, and put up new ones. Every design starts with who will work in the space and how, not with a ready-made floor plan.",
@@ -78,7 +78,7 @@ const en: Dictionary = {
     imageInteriorAlt: "Office reception with an arched window, an olive tree and a red chair",
   },
   transformation: {
-    kicker: "Development & reconstruction",
+    kicker: "From idea to move-in",
     titleLine1: "From bare concrete",
     titleLine2: "to a finished space.",
     lead: "We take commercial space over as a bare shell or as a building that needs reconstruction. Before move-in it goes through design, adaptation and interior fit-out, and we hand it to the tenant ready for work.",
@@ -115,11 +115,12 @@ const en: Dictionary = {
       },
       leasing: {
         title: "Commercial Space for Rent in Belgrade",
-        short: "Offices, commercial and warehouse space in buildings we own, with lease terms and fit-out agreed with you.",
-        long: "We rent out space in buildings we own. Lease terms, from floor area to contract length, depend on how much space you need and for how long, and we fit out the interior for your team before you move in.",
+        short: "Offices and commercial space in our own buildings and in buildings of other owners, with lease terms and fit-out agreed with you.",
+        long: "We offer commercial space in our own buildings and in buildings of other owners. Lease terms, from floor area to contract length, depend on how much space you need and for how long, and we fit out the interior for your team before you move in.",
         points: [
           "Office, commercial and warehouse space",
           "Space in our own buildings",
+          "Space in buildings of other owners",
           "Lease terms agreed case by case",
           "Interior adapted to the tenant before move-in",
         ],

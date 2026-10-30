@@ -69,7 +69,7 @@ const sr = {
     titleLine2Accent: "poslovni prostor.",
     primary: [
       "ANAMI je kompanija iz Zemuna koja se bavi poslovnim prostorima u Beogradu. Bavimo se poslovnim prostorom od početka do kraja: gradimo ga ili obnavljamo, izdajemo ga i brinemo o njemu dok je u upotrebi.",
-      "Najveći deo našeg posla je zakup poslovnog prostora. Izdajemo sopstvene objekte, pa onome ko traži kancelariju možemo da pokažemo više od jedne zgrade.",
+      "Najveći deo našeg posla je zakup poslovnog prostora. Izdajemo sopstvene objekte, a u ponudi imamo i prostore drugih vlasnika, pa onome ko traži kancelariju možemo da pokažemo više od jedne zgrade.",
     ],
     secondary: [
       "Drugi deo posla je gradnja poslovnih objekata. Radimo adaptacije i rekonstrukcije postojećih poslovnih objekata i gradimo nove. Projekat uvek počinje od toga ko će u prostoru raditi i kako, a ne od gotovog rasporeda.",
@@ -122,10 +122,11 @@ const sr = {
       },
       leasing: {
         title: "Zakup poslovnog prostora u Beogradu",
-        short: "Kancelarije i poslovni prostori u našim objektima, sa uslovima zakupa i enterijerom po dogovoru.",
-        long: "U ponudi imamo poslovne prostore u sopstvenim objektima. Uslove zakupa dogovaramo prema tome koliko vam prostora treba i na koliko dugo, a enterijer prilagođavamo vašem timu pre nego što se uselite.",
+        short: "Kancelarije i poslovni prostori u našim objektima i objektima drugih vlasnika, sa uslovima zakupa i enterijerom po dogovoru.",
+        long: "U ponudi imamo poslovne prostore u sopstvenim objektima i u objektima drugih vlasnika. Uslove zakupa dogovaramo prema tome koliko vam prostora treba i na koliko dugo, a enterijer prilagođavamo vašem timu pre nego što se uselite.",
         points: [
           "Prostor u sopstvenim objektima",
+          "Prostor u objektima drugih vlasnika",
           "Uslovi zakupa po dogovoru",
           "Enterijer prilagođen zakupcu pre useljenja",
         ],
